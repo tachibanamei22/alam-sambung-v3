@@ -33,10 +33,12 @@ service cloud.firestore {
       return request.resource.data.owner == resource.data.owner;
     }
 
-    // Products: public read so visitors can browse the catalog.
+    // Products: visitors may fetch ONE product by id (for its photo) but not
+    // list the collection; they browse the compact catalog/public document.
     // Members edit their own; any member can adjust stock when selling.
     match /products/{productId} {
-      allow read: if true;
+      allow get: if true;
+      allow list: if isMember();
       allow create: if isMember()
         && (isAdmin() || request.resource.data.owner == memberKey());
       allow update: if isMember() && (
@@ -58,6 +60,18 @@ service cloud.firestore {
       allow update: if isMember()
         && (isAdmin() || resource.data.staffId == memberKey())
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['voided', 'voidedAt']);
+      allow delete: if false;
+    }
+
+    // Public catalog: one small document visitors read instead of every
+    // product. Members' devices keep it in sync with the products.
+    match /catalog/{docId} {
+      allow read: if true;
+      allow create, update: if isMember()
+        && docId == 'public'
+        && request.resource.data.keys().hasOnly(['items', 'hash', 'updatedAt'])
+        && request.resource.data.items is list
+        && request.resource.data.items.size() <= 500;
       allow delete: if false;
     }
 

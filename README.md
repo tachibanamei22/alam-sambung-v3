@@ -68,9 +68,18 @@ Members, the admin and the email domain are defined in
 
 | Data | Where | Notes |
 |---|---|---|
-| Products | `products/{id}` | Public read so visitors can browse |
+| Products | `products/{id}` | Staff can list; visitors can only fetch one by id (for its photo) |
+| Public catalog | `catalog/public` | One small document (names, prices, availability) that visitors read instead of every product |
 | Sales | `sales/{id}` | Staff only; `pending` = not yet confirmed by the server |
 | Payment proofs | `proofs/{saleId}` | Compressed photo as a data URL, loaded on demand |
+
+**Public catalog.** Visitors read one document, so a busy day costs about one
+read per visitor instead of one per product (the free quota is about 50,000
+reads a day). Any signed-in staff device keeps it current: after the server has
+confirmed the product list it rebuilds the catalog and writes it only when
+something visitors can see changed (availability, price, name). Plain stock
+movements inside a status ("12 left" to "11 left") cause no write. If no staff
+device is online the catalog simply stays at its last published state.
 
 Proof photos are stored in Firestore, not Cloud Storage, because Storage needs
 the paid Blaze plan on new projects and Firestore queues writes offline for
