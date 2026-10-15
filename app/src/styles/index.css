@@ -109,6 +109,9 @@
   --font-head: 'Outfit Variable', ui-sans-serif, system-ui, sans-serif;
   --font-body: 'DM Sans Variable', ui-sans-serif, system-ui, sans-serif;
 
+  /* Between lg (1024) and xl (1280): lets a 1180px tablet show 4 product columns. */
+  --breakpoint-wide: 68.75rem;
+
   --radius-card: 24px;
   --radius-control: 16px;
 }
