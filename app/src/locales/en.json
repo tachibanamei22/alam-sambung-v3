@@ -69,11 +69,32 @@
   },
   "sales": {
     "title": "Sales",
-    "empty": "No sales yet today.",
+    "empty": "No sales to show.",
+    "filter": "Filter sales",
+    "filters": { "all": "All", "cash": "Cash", "qris": "QRIS", "transfer": "Transfer", "voided": "Voided" },
     "proofAttached": "Proof attached",
-    "waitingToSync": "Waiting to sync"
+    "waitingToSync": "Waiting to sync",
+    "voided": "Voided",
+    "voidSale": "Void this sale",
+    "confirmVoid": "Void this sale? The items go back into stock and it no longer counts in totals."
   },
-  "summary": { "title": "Today", "closeDay": "Close day & export" },
+  "summary": {
+    "title": "Summary",
+    "scope": { "today": "Today", "all": "All days" },
+    "totalSales": "Total sales",
+    "counts": "Sales: {{sales}} · Items sold: {{items}}",
+    "digital": "Digital",
+    "byMember": "By member",
+    "attention": {
+      "lowStock": "Low stock: {{count}}",
+      "pending": "Waiting to sync: {{count}}",
+      "voided": "Voided: {{count}}"
+    },
+    "closeDay": "Close day & export",
+    "exportHint": "Download the day's sales to settle up with each member.",
+    "exportSales": "Export sales (CSV)",
+    "exportMembers": "Export member totals (CSV)"
+  },
   "catalog": { "title": "Catalog" },
   "stamps": { "title": "Stamp rally", "scan": "Scan booth QR" },
   "common": { "synced": "Synced", "offline": "Offline", "soon": "Coming soon", "back": "Back" }

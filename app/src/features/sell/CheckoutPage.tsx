@@ -3,6 +3,7 @@ import { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { AmberHeader } from '@/components/AmberHeader'
+import { useCurrentUser } from '@/lib/currentUser'
 import { compressImage } from '@/lib/image'
 import { MEMBER_NAMES } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
@@ -24,6 +25,7 @@ export function CheckoutPage() {
   const navigate = useNavigate()
   const cart = useCart()
   const products = useProducts()
+  const user = useCurrentUser()
   const nameOf = useProductName()
   const fileRef = useRef<HTMLInputElement>(null)
 
@@ -75,7 +77,7 @@ export function CheckoutPage() {
     }))
     const sale: Sale = {
       id: crypto.randomUUID(),
-      staffId: 'local-staff',
+      staffId: user.memberKey,
       items: saleItems,
       total,
       payment: method,
