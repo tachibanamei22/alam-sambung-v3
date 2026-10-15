@@ -8,11 +8,36 @@
     "catalog": "Catalog",
     "stamps": "Stamps"
   },
-  "sell": { "title": "Sell", "search": "Search products", "reviewSale": "Review sale" },
+  "sell": { "title": "Sell", "search": "Search products", "reviewSale": "Review sale", "items": "{{count}} items" },
+  "checkout": {
+    "title": "Checkout",
+    "empty": "The cart is empty. Add products from the Sell screen.",
+    "total": "Total",
+    "payment": "Payment method",
+    "method": { "cash": "Cash", "qris": "QRIS", "transfer": "Transfer" },
+    "cashReceived": "Cash received",
+    "exact": "Exact",
+    "change": "Change",
+    "proof": {
+      "title": "Payment proof",
+      "required": "Required for {{method}}",
+      "attach": "Take or upload photo",
+      "attached": "Attached",
+      "retake": "Retake",
+      "error": "Could not read that photo. Please try again."
+    },
+    "offlineNote": "No connection? The sale is saved on this device and syncs later.",
+    "confirm": "Confirm sale · {{total}}"
+  },
   "stock": { "title": "Stock", "addProduct": "Add product" },
-  "sales": { "title": "Sales" },
+  "sales": {
+    "title": "Sales",
+    "empty": "No sales yet today.",
+    "proofAttached": "Proof attached",
+    "waitingToSync": "Waiting to sync"
+  },
   "summary": { "title": "Today", "closeDay": "Close day & export" },
   "catalog": { "title": "Catalog" },
   "stamps": { "title": "Stamp rally", "scan": "Scan booth QR" },
-  "common": { "synced": "Synced", "offline": "Offline", "soon": "Coming soon" }
+  "common": { "synced": "Synced", "offline": "Offline", "soon": "Coming soon", "back": "Back" }
 }
