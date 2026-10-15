@@ -50,7 +50,23 @@
     "scope": { "mine": "Produk saya", "all": "Semua produk" },
     "tiles": { "products": "Produk", "low": "Stok tipis", "soldOut": "Habis" },
     "lowStock": "Stok tipis",
-    "empty": "Belum ada produk. Tambah produk pertamamu."
+    "conflict": "Cek stok",
+    "empty": "Belum ada produk. Tambah produk pertamamu.",
+    "loadSamples": "Muat produk contoh"
+  },
+  "auth": {
+    "title": "Masuk",
+    "who": "Siapa yang jualan?",
+    "pin": "PIN {{length}} digit kamu",
+    "signIn": "Masuk",
+    "signOut": "Keluar",
+    "signedInAs": "Masuk sebagai {{name}}",
+    "hint": "Butuh koneksi internet saat pertama kali masuk di perangkat ini.",
+    "errors": {
+      "wrong": "PIN salah. Coba lagi.",
+      "offline": "Tidak ada koneksi. Sambungkan internet untuk masuk.",
+      "generic": "Gagal masuk. Silakan coba lagi."
+    }
   },
   "form": {
     "addTitle": "Tambah produk",

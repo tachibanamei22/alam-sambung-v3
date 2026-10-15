@@ -1,11 +1,23 @@
+import {
+  collection,
+  deleteDoc,
+  doc,
+  increment,
+  onSnapshot,
+  setDoc,
+  updateDoc,
+  writeBatch,
+} from 'firebase/firestore'
 import { useSyncExternalStore } from 'react'
+import { db, firebaseEnabled } from '@/lib/firebase'
 import type { Product } from '@/lib/types'
 
-// Local-first product catalog. This is replaced by Firestore (with its own
-// offline cache) once the Firebase project is connected.
+// With Firebase configured, Firestore is the source of truth and its offline
+// cache queues writes made without a connection. Without it, products live in
+// localStorage so the app still works for development and demos.
 const KEY = 'as-products'
 
-const SEED: Product[] = [
+export const SEED_PRODUCTS: Product[] = [
   { id: 'p1', owner: 'rina', nameId: 'Zine Vol.1', nameEn: 'Zine Vol.1', category: 'zine', price: 45000, stock: 12 },
   { id: 'p2', owner: 'rina', nameId: 'Paket Stiker', nameEn: 'Sticker Pack', category: 'sticker', price: 15000, stock: 40 },
   { id: 'p3', owner: 'dika', nameId: 'Gantungan Akrilik', nameEn: 'Acrylic Keychain', category: 'accessory', price: 30000, stock: 3 },
@@ -16,27 +28,53 @@ const SEED: Product[] = [
   { id: 'p8', owner: 'bima', nameId: 'Poster A3', nameEn: 'Poster A3', category: 'print', price: 40000, stock: 14 },
 ]
 
-function load(): Product[] {
+function loadLocal(): Product[] {
   try {
     const raw = localStorage.getItem(KEY)
     if (raw) return JSON.parse(raw) as Product[]
   } catch {
     // fall through to seed data
   }
-  return SEED
+  return SEED_PRODUCTS
 }
 
-let products: Product[] = load()
+let products: Product[] = firebaseEnabled ? [] : loadLocal()
 const listeners = new Set<() => void>()
 
-function commit(next: Product[]) {
+function emit() {
+  for (const listener of listeners) listener()
+}
+
+function commitLocal(next: Product[]) {
   products = next
   try {
     localStorage.setItem(KEY, JSON.stringify(products))
   } catch {
     // Storage full or unavailable: keep the in-memory copy for this session.
   }
-  for (const listener of listeners) listener()
+  emit()
+}
+
+function report(error: unknown) {
+  console.error('[products]', error)
+}
+
+/** Firestore rejects undefined values, so drop them before writing. */
+function clean<T extends object>(value: T): T {
+  return JSON.parse(JSON.stringify(value)) as T
+}
+
+/** Live-subscribe to the shared catalog (public read, so no login needed). */
+export function startProductsSync(): () => void {
+  if (!db) return () => {}
+  return onSnapshot(
+    collection(db, 'products'),
+    (snap) => {
+      products = snap.docs.map((d) => ({ ...(d.data() as Omit<Product, 'id'>), id: d.id }))
+      emit()
+    },
+    report,
+  )
 }
 
 function subscribe(listener: () => void) {
@@ -57,26 +95,63 @@ export function useProduct(id: string | undefined): Product | undefined {
 
 /** Insert or replace a product. */
 export function saveProduct(product: Product) {
+  if (db) {
+    const { id, ...data } = product
+    setDoc(doc(db, 'products', id), clean(data)).catch(report)
+    return
+  }
   const exists = products.some((p) => p.id === product.id)
-  commit(exists ? products.map((p) => (p.id === product.id ? product : p)) : [...products, product])
+  commitLocal(exists ? products.map((p) => (p.id === product.id ? product : p)) : [...products, product])
 }
 
 export function removeProduct(id: string) {
-  commit(products.filter((p) => p.id !== id))
+  if (db) {
+    deleteDoc(doc(db, 'products', id)).catch(report)
+    return
+  }
+  commitLocal(products.filter((p) => p.id !== id))
 }
 
 export function adjustStock(id: string, delta: number) {
-  commit(products.map((p) => (p.id === id ? { ...p, stock: Math.max(0, p.stock + delta) } : p)))
+  if (db) {
+    updateDoc(doc(db, 'products', id), { stock: increment(delta) }).catch(report)
+    return
+  }
+  commitLocal(products.map((p) => (p.id === id ? { ...p, stock: Math.max(0, p.stock + delta) } : p)))
+}
+
+function changeStock(items: { productId: string; qty: number }[], sign: 1 | -1) {
+  if (db) {
+    const batch = writeBatch(db)
+    for (const { productId, qty } of items) {
+      batch.update(doc(db, 'products', productId), { stock: increment(sign * qty) })
+    }
+    batch.commit().catch(report)
+    return
+  }
+  const delta = new Map(items.map((i) => [i.productId, sign * i.qty]))
+  commitLocal(
+    products.map((p) => {
+      const d = delta.get(p.id)
+      return d === undefined ? p : { ...p, stock: Math.max(0, p.stock + d) }
+    }),
+  )
 }
 
 /** Put items from a voided sale back into stock. */
 export function returnStock(items: { productId: string; qty: number }[]) {
-  const back = new Map(items.map((i) => [i.productId, i.qty]))
-  commit(products.map((p) => (back.has(p.id) ? { ...p, stock: p.stock + (back.get(p.id) ?? 0) } : p)))
+  changeStock(items, 1)
 }
 
-/** Reduce stock for a confirmed sale. Selling never needs edit rights. */
+/**
+ * Reduce stock for a confirmed sale. Selling never needs edit rights, and
+ * increments merge safely when two phones sell the same item offline.
+ */
 export function applySale(items: { productId: string; qty: number }[]) {
-  const sold = new Map(items.map((i) => [i.productId, i.qty]))
-  commit(products.map((p) => (sold.has(p.id) ? { ...p, stock: Math.max(0, p.stock - (sold.get(p.id) ?? 0)) } : p)))
+  changeStock(items, -1)
+}
+
+/** Load the sample catalog (used from the empty stock screen by the admin). */
+export function seedSampleProducts() {
+  for (const p of SEED_PRODUCTS) saveProduct(p)
 }

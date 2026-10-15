@@ -83,6 +83,7 @@ export function useCheckout() {
       payment: method,
       cashReceived: method === 'cash' ? cashReceived : undefined,
       proofDataUrl: needsProof && proof ? proof : undefined,
+      hasProof: needsProof && proof ? true : undefined,
       createdAt: Date.now(),
       pending: true,
     }

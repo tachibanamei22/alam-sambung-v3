@@ -50,7 +50,23 @@
     "scope": { "mine": "My products", "all": "All products" },
     "tiles": { "products": "Products", "low": "Low stock", "soldOut": "Sold out" },
     "lowStock": "Low stock",
-    "empty": "No products yet. Add your first one."
+    "conflict": "Check stock",
+    "empty": "No products yet. Add your first one.",
+    "loadSamples": "Load sample products"
+  },
+  "auth": {
+    "title": "Sign in",
+    "who": "Who is selling?",
+    "pin": "Your {{length}}-digit PIN",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "signedInAs": "Signed in as {{name}}",
+    "hint": "You need a connection the first time you sign in on a device.",
+    "errors": {
+      "wrong": "That PIN is not right. Try again.",
+      "offline": "No connection. Connect to the internet to sign in.",
+      "generic": "Could not sign in. Please try again."
+    }
   },
   "form": {
     "addTitle": "Add product",
