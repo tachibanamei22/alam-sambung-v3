@@ -4,12 +4,14 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { AmberHeader } from '@/components/AmberHeader'
 import { compressImage } from '@/lib/image'
+import { MEMBER_NAMES } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
+import { useProductName } from '@/lib/productName'
 import type { PaymentMethod, Sale, SaleItem } from '@/lib/types'
 import { cn } from '@/lib/utils'
+import { applySale, useProducts } from '../products/productsStore'
 import { addSale } from '../sales/salesStore'
 import { useCart } from './cart-context'
-import { findProduct } from './products'
 
 const METHODS: PaymentMethod[] = ['cash', 'qris', 'transfer']
 
@@ -21,6 +23,8 @@ export function CheckoutPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const cart = useCart()
+  const products = useProducts()
+  const nameOf = useProductName()
   const fileRef = useRef<HTMLInputElement>(null)
 
   const [method, setMethod] = useState<PaymentMethod>('cash')
@@ -31,10 +35,10 @@ export function CheckoutPage() {
   const items = useMemo(
     () =>
       cart.lines.flatMap((line) => {
-        const product = findProduct(line.productId)
+        const product = products.find((p) => p.id === line.productId)
         return product ? [{ product, qty: line.qty }] : []
       }),
-    [cart.lines],
+    [cart.lines, products],
   )
   const total = items.reduce((sum, i) => sum + i.product.price * i.qty, 0)
 
@@ -65,7 +69,7 @@ export function CheckoutPage() {
     const saleItems: SaleItem[] = items.map(({ product, qty }) => ({
       productId: product.id,
       ownerId: product.owner,
-      name: product.name,
+      name: nameOf(product),
       qty,
       unitPrice: product.price,
     }))
@@ -81,6 +85,7 @@ export function CheckoutPage() {
       pending: true,
     }
     addSale(sale)
+    applySale(saleItems)
     cart.clear()
     void navigate('/staff/sales')
   }
@@ -112,9 +117,9 @@ export function CheckoutPage() {
             {items.map(({ product, qty }) => (
               <div key={product.id} className="flex items-center gap-3">
                 <div className="flex min-w-0 flex-1 flex-col">
-                  <span className="truncate text-sm font-semibold">{product.name}</span>
+                  <span className="truncate text-sm font-semibold">{nameOf(product)}</span>
                   <span className="text-xs text-muted">
-                    {product.ownerName} · {formatRupiah(product.price)}
+                    {MEMBER_NAMES[product.owner]} ·{formatRupiah(product.price)}
                   </span>
                 </div>
                 <div className="flex items-center gap-2.5 rounded-full bg-soft p-1">

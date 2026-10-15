@@ -29,7 +29,44 @@
     "offlineNote": "Tidak ada koneksi? Penjualan disimpan di perangkat ini dan disinkronkan nanti.",
     "confirm": "Konfirmasi · {{total}}"
   },
-  "stock": { "title": "Stok", "addProduct": "Tambah produk" },
+  "stock": {
+    "title": "Stok",
+    "addProduct": "Tambah produk",
+    "roleMember": "Anggota",
+    "roleAdmin": "Admin",
+    "scope": { "mine": "Produk saya", "all": "Semua produk" },
+    "tiles": { "products": "Produk", "low": "Stok tipis", "soldOut": "Habis" },
+    "lowStock": "Stok tipis",
+    "empty": "Belum ada produk. Tambah produk pertamamu."
+  },
+  "form": {
+    "addTitle": "Tambah produk",
+    "editTitle": "Ubah produk",
+    "photo": "Ambil atau unggah foto",
+    "nameId": "Nama (ID)",
+    "nameEn": "Nama (EN)",
+    "member": "Anggota",
+    "you": "kamu",
+    "price": "Harga (Rp)",
+    "stock": "Stok",
+    "category": "Kategori",
+    "save": "Simpan produk",
+    "delete": "Hapus produk",
+    "confirmDelete": "Hapus produk ini? Tindakan ini tidak bisa dibatalkan.",
+    "errors": {
+      "name": "Isi nama minimal dalam satu bahasa.",
+      "price": "Isi harga di atas 0.",
+      "stock": "Stok harus bilangan bulat, 0 atau lebih."
+    }
+  },
+  "categories": {
+    "zine": "Zine",
+    "sticker": "Stiker",
+    "accessory": "Aksesori",
+    "print": "Cetak",
+    "merch": "Merchandise",
+    "other": "Lainnya"
+  },
   "sales": {
     "title": "Penjualan",
     "empty": "Belum ada penjualan hari ini.",

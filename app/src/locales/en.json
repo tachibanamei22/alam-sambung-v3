@@ -29,7 +29,44 @@
     "offlineNote": "No connection? The sale is saved on this device and syncs later.",
     "confirm": "Confirm sale · {{total}}"
   },
-  "stock": { "title": "Stock", "addProduct": "Add product" },
+  "stock": {
+    "title": "Stock",
+    "addProduct": "Add product",
+    "roleMember": "Member",
+    "roleAdmin": "Admin",
+    "scope": { "mine": "My products", "all": "All products" },
+    "tiles": { "products": "Products", "low": "Low stock", "soldOut": "Sold out" },
+    "lowStock": "Low stock",
+    "empty": "No products yet. Add your first one."
+  },
+  "form": {
+    "addTitle": "Add product",
+    "editTitle": "Edit product",
+    "photo": "Take or upload photo",
+    "nameId": "Name (ID)",
+    "nameEn": "Name (EN)",
+    "member": "Member",
+    "you": "you",
+    "price": "Price (Rp)",
+    "stock": "Stock",
+    "category": "Category",
+    "save": "Save product",
+    "delete": "Delete product",
+    "confirmDelete": "Delete this product? This cannot be undone.",
+    "errors": {
+      "name": "Enter a name in at least one language.",
+      "price": "Enter a price above 0.",
+      "stock": "Stock must be a whole number, 0 or more."
+    }
+  },
+  "categories": {
+    "zine": "Zine",
+    "sticker": "Sticker",
+    "accessory": "Accessory",
+    "print": "Print",
+    "merch": "Merch",
+    "other": "Other"
+  },
   "sales": {
     "title": "Sales",
     "empty": "No sales yet today.",
