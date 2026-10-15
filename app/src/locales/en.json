@@ -1,0 +1,18 @@
+{
+  "app": { "name": "Alam Sambung", "tagline": "Comifuro booth" },
+  "nav": {
+    "sell": "Sell",
+    "stock": "Stock",
+    "sales": "Sales",
+    "summary": "Summary",
+    "catalog": "Catalog",
+    "stamps": "Stamps"
+  },
+  "sell": { "title": "Sell", "search": "Search products", "reviewSale": "Review sale" },
+  "stock": { "title": "Stock", "addProduct": "Add product" },
+  "sales": { "title": "Sales" },
+  "summary": { "title": "Today", "closeDay": "Close day & export" },
+  "catalog": { "title": "Catalog" },
+  "stamps": { "title": "Stamp rally", "scan": "Scan booth QR" },
+  "common": { "synced": "Synced", "offline": "Offline", "soon": "Coming soon" }
+}

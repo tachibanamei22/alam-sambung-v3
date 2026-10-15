@@ -1,0 +1,127 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/outfit';
+@import '@fontsource-variable/dm-sans';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Design tokens from the Pencil design (Option 2 - amber header). */
+:root {
+  --bg: #fff8e6;
+  --surface: #ffffff;
+  --border: #f6e2c2;
+  --text: #2b1a08;
+  --muted: #8a6a3b;
+  --accent: #e98c57;
+  --on-accent: #2b1a08;
+  --accent-text: #b5541b;
+  --soft: #fde8d8;
+  --sticker: #ffc83d;
+  --on-sticker: #2b1a08;
+  --cart: #2b1a08;
+  --cart-sub: #e8cfa0;
+  --cart-text: #ffffff;
+  --cart-btn: #ffc83d;
+  --cart-btn-text: #2b1a08;
+  --rail: #2b1a08;
+  --rail-muted: #c9ad7a;
+  --warn: #b45309;
+  --danger: #b42318;
+  --amber: #ffc24b;
+  --glass: rgb(255 255 255 / 0.45);
+
+  --m-rina-bg: #ffefb8;
+  --m-rina-fg: #8a5a00;
+  --m-dika-bg: #ffddc2;
+  --m-dika-fg: #c2410c;
+  --m-sari-bg: #ffd9de;
+  --m-sari-fg: #be123c;
+  --m-bima-bg: #ddf1d0;
+  --m-bima-fg: #3f7a1f;
+}
+
+.dark {
+  --bg: #1a1208;
+  --surface: #261b0d;
+  --border: #3d2c14;
+  --text: #fff4dc;
+  --muted: #c9ad7a;
+  --accent: #e98c57;
+  --on-accent: #1a1208;
+  --accent-text: #f2a878;
+  --soft: #3a2616;
+  --sticker: #ffcb47;
+  --on-sticker: #1a1208;
+  --cart: #ffcb47;
+  --cart-sub: #6b4a0e;
+  --cart-text: #1a1208;
+  --cart-btn: #1a1208;
+  --cart-btn-text: #ffcb47;
+  --rail: #0f0a04;
+  --rail-muted: #8a6a3b;
+  --warn: #ffb454;
+  --danger: #ff8a80;
+  --amber: #33240f;
+  --glass: rgb(255 255 255 / 0.08);
+
+  --m-rina-bg: #4a3a10;
+  --m-rina-fg: #ffd54a;
+  --m-dika-bg: #4a2410;
+  --m-dika-fg: #ff9a5c;
+  --m-sari-bg: #4a1a24;
+  --m-sari-fg: #ff8fa3;
+  --m-bima-bg: #1f3a1a;
+  --m-bima-fg: #9bdb7c;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-accent-text: var(--accent-text);
+  --color-soft: var(--soft);
+  --color-sticker: var(--sticker);
+  --color-on-sticker: var(--on-sticker);
+  --color-cart: var(--cart);
+  --color-cart-sub: var(--cart-sub);
+  --color-cart-text: var(--cart-text);
+  --color-cart-btn: var(--cart-btn);
+  --color-cart-btn-text: var(--cart-btn-text);
+  --color-rail: var(--rail);
+  --color-rail-muted: var(--rail-muted);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --color-amber: var(--amber);
+  --color-glass: var(--glass);
+
+  --color-m-rina-bg: var(--m-rina-bg);
+  --color-m-rina-fg: var(--m-rina-fg);
+  --color-m-dika-bg: var(--m-dika-bg);
+  --color-m-dika-fg: var(--m-dika-fg);
+  --color-m-sari-bg: var(--m-sari-bg);
+  --color-m-sari-fg: var(--m-sari-fg);
+  --color-m-bima-bg: var(--m-bima-bg);
+  --color-m-bima-fg: var(--m-bima-fg);
+
+  --font-head: 'Outfit Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'DM Sans Variable', ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 24px;
+  --radius-control: 16px;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-tap-highlight-color: transparent;
+}

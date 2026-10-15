@@ -1,0 +1,18 @@
+{
+  "app": { "name": "Alam Sambung", "tagline": "Booth Comifuro" },
+  "nav": {
+    "sell": "Jual",
+    "stock": "Stok",
+    "sales": "Penjualan",
+    "summary": "Ringkasan",
+    "catalog": "Katalog",
+    "stamps": "Stamp"
+  },
+  "sell": { "title": "Jual", "search": "Cari produk", "reviewSale": "Cek pesanan" },
+  "stock": { "title": "Stok", "addProduct": "Tambah produk" },
+  "sales": { "title": "Penjualan" },
+  "summary": { "title": "Hari ini", "closeDay": "Tutup hari & ekspor" },
+  "catalog": { "title": "Katalog" },
+  "stamps": { "title": "Stamp rally", "scan": "Scan QR booth" },
+  "common": { "synced": "Tersinkron", "offline": "Offline", "soon": "Segera hadir" }
+}
