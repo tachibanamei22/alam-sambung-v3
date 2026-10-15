@@ -1,5 +1,5 @@
 import { Ban, ChevronDown, CloudOff, Paperclip } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AmberHeader } from '@/components/AmberHeader'
 import { useCurrentUser } from '@/lib/currentUser'
@@ -8,8 +8,30 @@ import { formatRupiah } from '@/lib/money'
 import type { MemberKey, Sale } from '@/lib/types'
 import { useNow } from '@/lib/useNow'
 import { cn } from '@/lib/utils'
-import { voidSale, useSales } from './salesStore'
+import { loadProof, useSales, voidSale } from './salesStore'
 import { isSameDay } from './stats'
+
+/** Loads the proof photo on demand so the sales list stays light. */
+function ProofImage({ sale, alt }: { sale: Sale; alt: string }) {
+  const [src, setSrc] = useState<string | null>(sale.proofDataUrl ?? null)
+
+  useEffect(() => {
+    let cancelled = false
+    loadProof(sale)
+      .then((url) => {
+        if (!cancelled) setSrc(url)
+      })
+      .catch(() => {
+        // offline and not cached: the photo shows once a connection is back
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [sale])
+
+  if (!src) return <div className="h-24 animate-pulse rounded-2xl bg-soft" />
+  return <img src={src} alt={alt} className="max-h-56 w-full rounded-2xl border border-border object-contain" />
+}
 
 type Filter = 'all' | 'cash' | 'qris' | 'transfer' | 'voided'
 const FILTERS: Filter[] = ['all', 'cash', 'qris', 'transfer', 'voided']
@@ -113,7 +135,7 @@ export function SalesPage() {
                       {t('sales.voided')}
                     </span>
                   )}
-                  {sale.proofDataUrl && (
+                  {(sale.hasProof || sale.proofDataUrl) && (
                     <span className="flex items-center gap-1 rounded-full bg-sticker px-2 py-0.5 text-[11px] font-semibold text-on-sticker">
                       <Paperclip className="size-3" />
                       {t('sales.proofAttached')}
@@ -150,12 +172,8 @@ export function SalesPage() {
                       {t('checkout.change')}: {formatRupiah(Math.max(0, sale.cashReceived - sale.total))}
                     </p>
                   )}
-                  {sale.proofDataUrl && (
-                    <img
-                      src={sale.proofDataUrl}
-                      alt={t('checkout.proof.title')}
-                      className="max-h-56 w-full rounded-2xl border border-border object-contain"
-                    />
+                  {(sale.hasProof || sale.proofDataUrl) && (
+                    <ProofImage sale={sale} alt={t('checkout.proof.title')} />
                   )}
                   {canVoid && (
                     <button

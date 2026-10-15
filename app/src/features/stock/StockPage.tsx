@@ -9,7 +9,8 @@ import { MEMBER_NAMES, MEMBER_TINT } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
 import { useProductName } from '@/lib/productName'
 import { cn } from '@/lib/utils'
-import { adjustStock, useProducts } from '../products/productsStore'
+import { firebaseEnabled } from '@/lib/firebase'
+import { adjustStock, seedSampleProducts, useProducts } from '../products/productsStore'
 import { DevUserSwitcher } from './DevUserSwitcher'
 
 type Scope = 'mine' | 'all'
@@ -69,7 +70,20 @@ export function StockPage() {
         </div>
 
         <section className="flex flex-col rounded-card border border-border bg-surface px-4 py-1">
-          {visible.length === 0 && <p className="py-4 text-sm text-muted">{t('stock.empty')}</p>}
+          {visible.length === 0 && (
+            <div className="flex flex-col items-start gap-3 py-4">
+              <p className="text-sm text-muted">{t('stock.empty')}</p>
+              {user.role === 'admin' && products.length === 0 && (
+                <button
+                  type="button"
+                  onClick={seedSampleProducts}
+                  className="rounded-2xl border border-border px-4 py-2 text-[13px] font-semibold"
+                >
+                  {t('stock.loadSamples')}
+                </button>
+              )}
+            </div>
+          )}
           {visible.map((p, i) => {
             const editable = canEditProduct(user, p)
             const isLow = p.stock <= 3
@@ -102,7 +116,7 @@ export function StockPage() {
                     <span className={cn('text-xs', isLow ? 'text-warn' : 'text-muted')}>
                       {effectiveScope === 'all' ? `${MEMBER_NAMES[p.owner]} · ` : ''}
                       {formatRupiah(p.price)}
-                      {isLow ? ` · ${t('stock.lowStock')}` : ''}
+                      {isLow ? ` · ${p.stock < 0 ? t('stock.conflict') : t('stock.lowStock')}` : ''}
                     </span>
                   </span>
                 </button>
@@ -117,8 +131,9 @@ export function StockPage() {
                     <button
                       type="button"
                       aria-label="-"
+                      disabled={p.stock <= 0}
                       onClick={() => adjustStock(p.id, -1)}
-                      className="flex size-7 items-center justify-center rounded-full"
+                      className="flex size-7 items-center justify-center rounded-full disabled:opacity-30"
                     >
                       <Minus className="size-3.5" />
                     </button>
@@ -145,7 +160,7 @@ export function StockPage() {
           })}
         </section>
 
-        {import.meta.env.DEV && <DevUserSwitcher />}
+        {!firebaseEnabled && import.meta.env.DEV && <DevUserSwitcher />}
       </div>
 
       <div className="sticky bottom-[84px] px-4 pb-2 pt-2">

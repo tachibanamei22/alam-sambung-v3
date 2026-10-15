@@ -39,10 +39,10 @@ export interface Sale {
   items: SaleItem[]
   total: number
   payment: PaymentMethod
-  /** Storage path of the proof photo, required for qris/transfer. */
-  proofPath?: string
-  /** Compressed proof photo kept on the device until it is uploaded. */
+  /** Compressed proof photo; in Firestore it lives in `proofs/{saleId}`. */
   proofDataUrl?: string
+  /** True when a proof photo exists for this sale. */
+  hasProof?: boolean
   cashReceived?: number
   createdAt: number
   voided?: boolean

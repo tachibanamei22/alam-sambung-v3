@@ -4,6 +4,9 @@ import { Outlet, useLocation } from 'react-router'
 import { NavRail } from '@/components/NavRail'
 import { TabBar } from '@/components/TabBar'
 import type { TabItem } from '@/components/TabBar'
+import { LoginPage } from '@/features/auth/LoginPage'
+import { useCurrentUser } from '@/lib/currentUser'
+import { firebaseEnabled } from '@/lib/firebase'
 import { cn } from '@/lib/utils'
 
 interface ShellProps {
@@ -41,12 +44,17 @@ function Shell({ tabs, tablet, narrow }: ShellProps) {
 export function StaffLayout() {
   const { t } = useTranslation()
   const { pathname } = useLocation()
+  const user = useCurrentUser()
   const tabs: TabItem[] = [
     { to: '/staff/sell', label: t('nav.sell'), Icon: ShoppingCart },
     { to: '/staff/stock', label: t('nav.stock'), Icon: Package },
     { to: '/staff/sales', label: t('nav.sales'), Icon: Receipt },
     { to: '/staff/summary', label: t('nav.summary'), Icon: ChartColumn },
   ]
+  if (firebaseEnabled && user.status === 'loading') {
+    return <div className="flex min-h-dvh items-center justify-center bg-bg text-sm text-muted">…</div>
+  }
+  if (firebaseEnabled && user.status === 'signedOut') return <LoginPage />
   return <Shell tabs={tabs} tablet narrow={!pathname.startsWith('/staff/sell')} />
 }
 

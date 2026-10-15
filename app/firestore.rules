@@ -1,56 +1,75 @@
 rules_version = '2';
 
+// Staff are Firebase email/password accounts named <member>@alamsambung.app
+// (see src/lib/identity.ts). The member is the part before the @. Keep the
+// two lists below in sync with MEMBER_KEYS and ADMIN_KEYS in the app.
 service cloud.firestore {
   match /databases/{database}/documents {
 
     function signedIn() {
-      return request.auth != null;
+      return request.auth != null && request.auth.token.email != null;
     }
 
-    function userDoc() {
-      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    function memberKey() {
+      return request.auth.token.email.split('@')[0];
+    }
+
+    function isMember() {
+      return signedIn()
+        && request.auth.token.email.matches('.*@alamsambung[.]app')
+        && memberKey() in ['rina', 'dika', 'sari', 'bima'];
     }
 
     function isAdmin() {
-      return signedIn() && userDoc().role == 'admin';
+      return isMember() && memberKey() in ['rina'];
     }
 
     // Selling someone else's product only changes its stock count.
     function onlyStockChanged() {
-      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stock', 'updatedAt']);
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stock']);
     }
 
-    // Staff profiles: readable by staff, managed by the admin.
-    match /users/{uid} {
-      allow read: if signedIn();
-      allow write: if isAdmin();
+    function keepsOwner() {
+      return request.resource.data.owner == resource.data.owner;
     }
 
     // Products: public read so visitors can browse the catalog.
-    // Members edit their own; any staff can adjust stock when selling.
+    // Members edit their own; any member can adjust stock when selling.
     match /products/{productId} {
       allow read: if true;
-      allow create: if signedIn() && (isAdmin() || request.resource.data.ownerId == request.auth.uid);
-      allow update: if signedIn() && (
-        isAdmin() ||
-        resource.data.ownerId == request.auth.uid ||
-        onlyStockChanged()
+      allow create: if isMember()
+        && (isAdmin() || request.resource.data.owner == memberKey());
+      allow update: if isMember() && (
+        isAdmin()
+        || (resource.data.owner == memberKey() && keepsOwner())
+        || onlyStockChanged()
       );
-      allow delete: if isAdmin() || (signedIn() && resource.data.ownerId == request.auth.uid);
+      allow delete: if isMember() && (isAdmin() || resource.data.owner == memberKey());
     }
 
-    // Sales: created by the seller, never deleted. Admin can void or fix.
+    // Sales: created by the seller, never deleted. The seller or the admin
+    // can void a sale (only the void fields may change).
     match /sales/{saleId} {
-      allow read: if signedIn();
-      allow create: if signedIn() && request.resource.data.staffId == request.auth.uid;
-      allow update: if isAdmin() || (signedIn() && resource.data.staffId == request.auth.uid);
+      allow read: if isMember();
+      allow create: if isMember()
+        && request.resource.data.staffId == memberKey()
+        && request.resource.data.items.size() > 0
+        && request.resource.data.total is number;
+      allow update: if isMember()
+        && (isAdmin() || resource.data.staffId == memberKey())
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['voided', 'voidedAt']);
       allow delete: if false;
     }
 
-    // Stamp booths: public read, admin write.
-    match /stampBooths/{boothId} {
-      allow read: if true;
-      allow write: if isAdmin();
+    // Payment proof photos (compressed data URLs, under the 1 MiB document
+    // limit). Kept apart from sales so the sales list stays small.
+    match /proofs/{saleId} {
+      allow read: if isMember();
+      allow create: if isMember()
+        && request.resource.data.keys().hasOnly(['dataUrl'])
+        && request.resource.data.dataUrl is string
+        && request.resource.data.dataUrl.size() < 900000;
+      allow update, delete: if false;
     }
   }
 }
