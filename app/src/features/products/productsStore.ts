@@ -64,25 +64,49 @@ function clean<T extends object>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T
 }
 
-/** Live-subscribe to the shared catalog (public read, so no login needed). */
+// True once the server has confirmed the product list at least once, so we
+// never publish a half-loaded (cache-only) catalog.
+let serverSynced = false
+
+/** Live-subscribe to all products. Staff only (visitors use the public catalog). */
 export function startProductsSync(): () => void {
   if (!db) return () => {}
   return onSnapshot(
     collection(db, 'products'),
+    { includeMetadataChanges: true },
     (snap) => {
       products = snap.docs.map((d) => ({ ...(d.data() as Omit<Product, 'id'>), id: d.id }))
+      if (!snap.metadata.fromCache) serverSynced = true
       emit()
     },
     report,
   )
 }
 
-function subscribe(listener: () => void) {
+/** Forget cached products, e.g. after signing out. */
+export function clearProducts() {
+  if (!db) return
+  products = []
+  serverSynced = false
+  emit()
+}
+
+export function getProducts(): Product[] {
+  return products
+}
+
+export function isProductsServerSynced(): boolean {
+  return serverSynced
+}
+
+export function subscribeProducts(listener: () => void) {
   listeners.add(listener)
   return () => {
     listeners.delete(listener)
   }
 }
+
+const subscribe = subscribeProducts
 
 export function useProducts(): Product[] {
   return useSyncExternalStore(subscribe, () => products)
