@@ -85,6 +85,69 @@ Proof photos are stored in Firestore, not Cloud Storage, because Storage needs
 the paid Blaze plan on new projects and Firestore queues writes offline for
 free. Each photo is compressed to roughly 100-250 KB, under the 1 MiB limit.
 
+## CI and deployment
+
+GitHub Actions workflows live in `.github/workflows`:
+
+| Workflow | When | What it does |
+|---|---|---|
+| `ci.yml` | every pull request, pushes to `main` | `npm ci`, lint, unit tests, build (in `app/`) |
+| `preview.yml` | pull requests from this repo | Builds and publishes a temporary preview URL on Firebase Hosting (7 days) |
+| `deploy.yml` | pushes to `main`, or run manually | Lint, test, build, then publishes the live site |
+| `deploy-rules.yml` | run manually | Publishes `app/firestore.rules` to the project |
+
+`preview.yml`, `deploy.yml` and `deploy-rules.yml` skip themselves until the
+repository variable `FIREBASE_PROJECT_ID` exists, so they are safe to merge
+before Firebase is set up.
+
+### One-time setup
+
+1. **Service account key.** Firebase console > Project settings > Service
+   accounts > Generate new private key. Keep the JSON file out of git.
+2. **GitHub secret.** Repo > Settings > Secrets and variables > Actions >
+   Secrets > New repository secret. Name `FIREBASE_SERVICE_ACCOUNT`, value is
+   the whole JSON file. Then delete the downloaded file.
+3. **GitHub variables** (same page, Variables tab). These are the same public
+   web-app values as `.env.local`, not secrets:
+
+   | Variable | Value |
+   |---|---|
+   | `FIREBASE_PROJECT_ID` | project id |
+   | `VITE_FIREBASE_API_KEY` | web API key |
+   | `VITE_FIREBASE_AUTH_DOMAIN` | `<project>.firebaseapp.com` |
+   | `VITE_FIREBASE_MESSAGING_SENDER_ID` | sender id |
+   | `VITE_FIREBASE_APP_ID` | web app id |
+4. **Hosting.** Firebase console > Build > Hosting > Get started (just
+   create the site, no CLI steps needed).
+5. **Publish.** Merge to `main` (or run "Deploy to Firebase Hosting" from the
+   Actions tab). The site is at `https://<project>.web.app`.
+6. **Rules** (optional automation). Grant the service account the
+   "Firebase Rules Admin" role in Google Cloud IAM, then run "Deploy Firestore
+   rules" from the Actions tab whenever `firestore.rules` changes. Otherwise
+   paste the rules into the console as before.
+
+Recommended: Settings > Branches > protect `main` and require the `CI` check.
+
+### Manual deploy from a laptop
+
+```bash
+npm install -g firebase-tools
+firebase login
+cd app
+firebase use <project-id>
+npm run build
+firebase deploy --only hosting,firestore:rules
+```
+
+Print the stamp rally QR codes from the **live** site (`/staff/stamp-codes`), so
+they point at the public address and not at `localhost`.
+
+### App icons
+
+The icon is the "App Icon 512" frame in `design/alam-sambung.pen`, exported to
+`app/public/icons` (192, 512, maskable 512 and the 180px Apple touch icon).
+`favicon.svg` is a hand-written SVG of the same mark.
+
 ## Stack
 
 | Layer | Choice |
@@ -116,5 +179,7 @@ Done: sell, checkout with proof, stock, sales log with void, summary + CSV,
 visitor catalog and stamp rally, tablet layout, Firebase wiring (needs a
 project and the steps above).
 
-Not done: deploy to Firebase Hosting, CI, PWA icons, stamp-rally anti-cheat
-beyond static booth tokens.
+Also done: CI, Firebase Hosting deploy and PR previews, PWA icons.
+
+Not done: stamp-rally anti-cheat beyond static booth tokens, real member
+names, end-to-end test against a live Firebase project.
