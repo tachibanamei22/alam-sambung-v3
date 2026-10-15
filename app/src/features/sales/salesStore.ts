@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from 'react'
 import type { Sale } from '@/lib/types'
+import { returnStock } from '../products/productsStore'
 
 // Local-first sales log. Sales are saved on the device immediately and marked
 // pending; the Firestore sync step will flip `pending` once uploaded.
@@ -33,6 +34,19 @@ export function addSale(sale: Sale) {
   sales = [sale, ...sales]
   persist()
   emit()
+}
+
+/** Void a sale and put its items back into stock. Returns false if nothing changed. */
+export function voidSale(id: string): boolean {
+  const sale = sales.find((s) => s.id === id)
+  if (!sale || sale.voided) return false
+  sales = sales.map((s) =>
+    s.id === id ? { ...s, voided: true, voidedAt: Date.now(), pending: true } : s,
+  )
+  persist()
+  emit()
+  returnStock(sale.items)
+  return true
 }
 
 function subscribe(listener: () => void) {

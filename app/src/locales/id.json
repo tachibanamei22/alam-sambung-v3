@@ -69,11 +69,32 @@
   },
   "sales": {
     "title": "Penjualan",
-    "empty": "Belum ada penjualan hari ini.",
+    "empty": "Tidak ada penjualan.",
+    "filter": "Filter penjualan",
+    "filters": { "all": "Semua", "cash": "Tunai", "qris": "QRIS", "transfer": "Transfer", "voided": "Dibatalkan" },
     "proofAttached": "Bukti terlampir",
-    "waitingToSync": "Menunggu sinkron"
+    "waitingToSync": "Menunggu sinkron",
+    "voided": "Dibatalkan",
+    "voidSale": "Batalkan penjualan ini",
+    "confirmVoid": "Batalkan penjualan ini? Barang kembali ke stok dan tidak dihitung di total."
   },
-  "summary": { "title": "Hari ini", "closeDay": "Tutup hari & ekspor" },
+  "summary": {
+    "title": "Ringkasan",
+    "scope": { "today": "Hari ini", "all": "Semua hari" },
+    "totalSales": "Total penjualan",
+    "counts": "Penjualan: {{sales}} · Barang terjual: {{items}}",
+    "digital": "Digital",
+    "byMember": "Per anggota",
+    "attention": {
+      "lowStock": "Stok tipis: {{count}}",
+      "pending": "Menunggu sinkron: {{count}}",
+      "voided": "Dibatalkan: {{count}}"
+    },
+    "closeDay": "Tutup hari & ekspor",
+    "exportHint": "Unduh penjualan hari ini untuk dibagi ke tiap anggota.",
+    "exportSales": "Ekspor penjualan (CSV)",
+    "exportMembers": "Ekspor total anggota (CSV)"
+  },
   "catalog": { "title": "Katalog" },
   "stamps": { "title": "Stamp rally", "scan": "Scan QR booth" },
   "common": { "synced": "Tersinkron", "offline": "Offline", "soon": "Segera hadir", "back": "Kembali" }

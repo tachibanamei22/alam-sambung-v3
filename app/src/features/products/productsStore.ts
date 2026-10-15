@@ -69,6 +69,12 @@ export function adjustStock(id: string, delta: number) {
   commit(products.map((p) => (p.id === id ? { ...p, stock: Math.max(0, p.stock + delta) } : p)))
 }
 
+/** Put items from a voided sale back into stock. */
+export function returnStock(items: { productId: string; qty: number }[]) {
+  const back = new Map(items.map((i) => [i.productId, i.qty]))
+  commit(products.map((p) => (back.has(p.id) ? { ...p, stock: p.stock + (back.get(p.id) ?? 0) } : p)))
+}
+
 /** Reduce stock for a confirmed sale. Selling never needs edit rights. */
 export function applySale(items: { productId: string; qty: number }[]) {
   const sold = new Map(items.map((i) => [i.productId, i.qty]))

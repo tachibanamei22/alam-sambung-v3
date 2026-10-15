@@ -46,6 +46,7 @@ export interface Sale {
   cashReceived?: number
   createdAt: number
   voided?: boolean
+  voidedAt?: number
   /** True until the sale has been synced to the backend. */
   pending?: boolean
 }

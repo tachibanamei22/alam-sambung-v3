@@ -7,6 +7,7 @@ import { CheckoutPage } from '@/features/sell/CheckoutPage'
 import { SellPage } from '@/features/sell/SellPage'
 import { ProductFormPage } from '@/features/stock/ProductFormPage'
 import { StockPage } from '@/features/stock/StockPage'
+import { SummaryPage } from '@/features/summary/SummaryPage'
 
 export default function App() {
   return (
@@ -21,7 +22,7 @@ export default function App() {
             <Route path="stock/new" element={<ProductFormPage />} />
             <Route path="stock/:id" element={<ProductFormPage />} />
             <Route path="sales" element={<SalesPage />} />
-            <Route path="summary" element={<ComingSoonPage titleKey="summary.title" />} />
+            <Route path="summary" element={<SummaryPage />} />
           </Route>
           <Route path="/visit" element={<VisitorLayout />}>
             <Route index element={<ComingSoonPage titleKey="catalog.title" />} />
