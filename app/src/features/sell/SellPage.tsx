@@ -4,19 +4,26 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { AmberHeader } from '@/components/AmberHeader'
 import { ProductCard } from '@/components/ProductCard'
+import { MEMBER_NAMES } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
+import { useProductName } from '@/lib/productName'
+import { useProducts } from '../products/productsStore'
 import { useCart } from './cart-context'
-import { SAMPLE_PRODUCTS, findProduct } from './products'
 
 export function SellPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const cart = useCart()
+  const products = useProducts()
+  const nameOf = useProductName()
 
   const total = useMemo(
     () =>
-      cart.lines.reduce((sum, line) => sum + (findProduct(line.productId)?.price ?? 0) * line.qty, 0),
-    [cart.lines],
+      cart.lines.reduce(
+        (sum, line) => sum + (products.find((p) => p.id === line.productId)?.price ?? 0) * line.qty,
+        0,
+      ),
+    [cart.lines, products],
   )
 
   return (
@@ -29,12 +36,14 @@ export function SellPage() {
       </AmberHeader>
 
       <section className="grid flex-1 grid-cols-2 content-start gap-3 px-5 pt-5">
-        {SAMPLE_PRODUCTS.map((p) => (
+        {products.map((p) => (
           <ProductCard
             key={p.id}
-            name={p.name}
+            name={nameOf(p)}
             owner={p.owner}
-            ownerName={p.ownerName}
+            ownerName={MEMBER_NAMES[p.owner]}
+            category={p.category}
+            photoUrl={p.photoUrl}
             price={p.price}
             stock={p.stock}
             qty={cart.qty[p.id] ?? 0}

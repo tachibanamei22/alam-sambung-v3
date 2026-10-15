@@ -1,20 +1,16 @@
-import { Package, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
+import { CATEGORY_ICONS } from '@/lib/categories'
+import { MEMBER_TINT } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
+import type { CategoryId, MemberKey } from '@/lib/types'
 import { cn } from '@/lib/utils'
-
-export type MemberKey = 'rina' | 'dika' | 'sari' | 'bima'
-
-const TINT: Record<MemberKey, string> = {
-  rina: 'bg-m-rina-bg text-m-rina-fg',
-  dika: 'bg-m-dika-bg text-m-dika-fg',
-  sari: 'bg-m-sari-bg text-m-sari-fg',
-  bima: 'bg-m-bima-bg text-m-bima-fg',
-}
 
 interface ProductCardProps {
   name: string
   owner: MemberKey
   ownerName: string
+  category: CategoryId
+  photoUrl?: string
   price: number
   stock: number
   /** Quantity currently in the cart. */
@@ -22,23 +18,38 @@ interface ProductCardProps {
   onAdd?: () => void
 }
 
-export function ProductCard({ name, owner, ownerName, price, stock, qty = 0, onAdd }: ProductCardProps) {
+export function ProductCard({
+  name,
+  owner,
+  ownerName,
+  category,
+  photoUrl,
+  price,
+  stock,
+  qty = 0,
+  onAdd,
+}: ProductCardProps) {
   const soldOut = stock <= 0
   const low = stock > 0 && stock <= 3
+  const Icon = CATEGORY_ICONS[category]
   return (
     <button
       type="button"
       disabled={soldOut}
       onClick={onAdd}
       className={cn(
-        'flex flex-col gap-2.5 rounded-card border bg-surface p-2.5 text-left transition-colors',
+        'flex flex-col gap-2.5 rounded-card border bg-surface p-2.5 text-left',
         qty > 0 ? 'border-2 border-text' : 'border-border',
         soldOut && 'opacity-50',
       )}
     >
-      <div className={cn('flex h-[104px] items-center justify-center rounded-[18px]', TINT[owner])}>
-        <Package className="size-[30px]" />
-      </div>
+      {photoUrl ? (
+        <img src={photoUrl} alt="" className="h-[104px] w-full rounded-[18px] object-cover" />
+      ) : (
+        <div className={cn('flex h-[104px] items-center justify-center rounded-[18px]', MEMBER_TINT[owner])}>
+          <Icon className="size-[30px]" />
+        </div>
+      )}
       <div className="flex flex-col gap-0.5">
         <span className="text-sm font-semibold text-text">{name}</span>
         <span className={cn('text-xs', low ? 'text-warn' : 'text-muted')}>

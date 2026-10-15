@@ -1,25 +1,28 @@
 export type Role = 'member' | 'admin'
 
+export type MemberKey = 'rina' | 'dika' | 'sari' | 'bima'
+
 export type PaymentMethod = 'cash' | 'qris' | 'transfer'
+
+export type CategoryId = 'zine' | 'sticker' | 'accessory' | 'print' | 'merch' | 'other'
 
 export interface AppUser {
   uid: string
   name: string
   role: Role
-  /** Display initial and tint key, e.g. "rina". */
-  memberKey: string
+  memberKey: MemberKey
 }
 
 export interface Product {
   id: string
-  ownerId: string
+  owner: MemberKey
   nameId: string
   nameEn: string
-  category: string
+  category: CategoryId
   price: number
   stock: number
+  /** Compressed photo kept on the device until it is uploaded. */
   photoUrl?: string
-  active: boolean
 }
 
 export interface SaleItem {

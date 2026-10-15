@@ -5,6 +5,8 @@ import { SalesPage } from '@/features/sales/SalesPage'
 import { CartProvider } from '@/features/sell/CartProvider'
 import { CheckoutPage } from '@/features/sell/CheckoutPage'
 import { SellPage } from '@/features/sell/SellPage'
+import { ProductFormPage } from '@/features/stock/ProductFormPage'
+import { StockPage } from '@/features/stock/StockPage'
 
 export default function App() {
   return (
@@ -15,7 +17,9 @@ export default function App() {
             <Route index element={<Navigate to="sell" replace />} />
             <Route path="sell" element={<SellPage />} />
             <Route path="checkout" element={<CheckoutPage />} />
-            <Route path="stock" element={<ComingSoonPage titleKey="stock.title" />} />
+            <Route path="stock" element={<StockPage />} />
+            <Route path="stock/new" element={<ProductFormPage />} />
+            <Route path="stock/:id" element={<ProductFormPage />} />
             <Route path="sales" element={<SalesPage />} />
             <Route path="summary" element={<ComingSoonPage titleKey="summary.title" />} />
           </Route>
