@@ -38,9 +38,13 @@ export interface Sale {
   payment: PaymentMethod
   /** Storage path of the proof photo, required for qris/transfer. */
   proofPath?: string
+  /** Compressed proof photo kept on the device until it is uploaded. */
+  proofDataUrl?: string
   cashReceived?: number
   createdAt: number
   voided?: boolean
+  /** True until the sale has been synced to the backend. */
+  pending?: boolean
 }
 
 export interface StampBooth {

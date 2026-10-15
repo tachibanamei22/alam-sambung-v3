@@ -8,11 +8,36 @@
     "catalog": "Katalog",
     "stamps": "Stamp"
   },
-  "sell": { "title": "Jual", "search": "Cari produk", "reviewSale": "Cek pesanan" },
+  "sell": { "title": "Jual", "search": "Cari produk", "reviewSale": "Cek pesanan", "items": "{{count}} barang" },
+  "checkout": {
+    "title": "Pembayaran",
+    "empty": "Keranjang kosong. Tambah produk dari layar Jual.",
+    "total": "Total",
+    "payment": "Metode pembayaran",
+    "method": { "cash": "Tunai", "qris": "QRIS", "transfer": "Transfer" },
+    "cashReceived": "Uang diterima",
+    "exact": "Pas",
+    "change": "Kembalian",
+    "proof": {
+      "title": "Bukti pembayaran",
+      "required": "Wajib untuk {{method}}",
+      "attach": "Ambil atau unggah foto",
+      "attached": "Terlampir",
+      "retake": "Ulangi",
+      "error": "Foto tidak bisa dibaca. Coba lagi."
+    },
+    "offlineNote": "Tidak ada koneksi? Penjualan disimpan di perangkat ini dan disinkronkan nanti.",
+    "confirm": "Konfirmasi · {{total}}"
+  },
   "stock": { "title": "Stok", "addProduct": "Tambah produk" },
-  "sales": { "title": "Penjualan" },
+  "sales": {
+    "title": "Penjualan",
+    "empty": "Belum ada penjualan hari ini.",
+    "proofAttached": "Bukti terlampir",
+    "waitingToSync": "Menunggu sinkron"
+  },
   "summary": { "title": "Hari ini", "closeDay": "Tutup hari & ekspor" },
   "catalog": { "title": "Katalog" },
   "stamps": { "title": "Stamp rally", "scan": "Scan QR booth" },
-  "common": { "synced": "Tersinkron", "offline": "Offline", "soon": "Segera hadir" }
+  "common": { "synced": "Tersinkron", "offline": "Offline", "soon": "Segera hadir", "back": "Kembali" }
 }
