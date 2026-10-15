@@ -90,12 +90,50 @@
       "pending": "Waiting to sync: {{count}}",
       "voided": "Voided: {{count}}"
     },
+    "stampCodes": "Print stamp rally QR codes",
     "closeDay": "Close day & export",
     "exportHint": "Download the day's sales to settle up with each member.",
     "exportSales": "Export sales (CSV)",
     "exportMembers": "Export member totals (CSV)"
   },
-  "catalog": { "title": "Catalog" },
-  "stamps": { "title": "Stamp rally", "scan": "Scan booth QR" },
-  "common": { "synced": "Synced", "offline": "Offline", "soon": "Coming soon", "back": "Back" }
+  "catalog": {
+    "title": "Catalog",
+    "by": "by {{name}}",
+    "empty": "No products match your search.",
+    "stampBanner": "Collect all stamps, get a prize",
+    "availability": { "available": "Available", "almostGone": "Almost gone", "soldOut": "Sold out" }
+  },
+  "stamps": {
+    "title": "Stamp rally",
+    "scan": "Scan booth QR",
+    "ofTotal": "/ {{total}} stamps",
+    "toGo": "{{count}} to go",
+    "complete": "All stamps collected!",
+    "reward": "Exclusive sticker sheet",
+    "unlocksAt": "Unlocks at {{total}} stamps",
+    "rewardReady": "Reward ready!",
+    "showStaff": "Show this to a booth member. Card code: {{code}}",
+    "cameraUnsupported": "Camera scanning is not available here. Scan the booth QR with your phone's camera app, or type the code below.",
+    "cameraDenied": "Camera access was blocked. Scan the booth QR with your phone's camera app, or type the code below.",
+    "enterCode": "Or enter the booth code",
+    "submitCode": "Add",
+    "claim": {
+      "ok": "Stamp collected from {{booth}}!",
+      "duplicate": "You already have the {{booth}} stamp.",
+      "unknown": "This QR code is not part of the stamp rally.",
+      "viewCard": "View my stamp card"
+    },
+    "codes": {
+      "title": "Stamp codes",
+      "print": "Print QR codes",
+      "localWarning": "You are on {{origin}}. Open this page from the live site before printing, or the QR codes will point to your computer."
+    }
+  },
+  "common": {
+    "synced": "Synced",
+    "offline": "Offline",
+    "soon": "Coming soon",
+    "back": "Back",
+    "close": "Close"
+  }
 }

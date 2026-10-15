@@ -90,12 +90,50 @@
       "pending": "Menunggu sinkron: {{count}}",
       "voided": "Dibatalkan: {{count}}"
     },
+    "stampCodes": "Cetak QR stamp rally",
     "closeDay": "Tutup hari & ekspor",
     "exportHint": "Unduh penjualan hari ini untuk dibagi ke tiap anggota.",
     "exportSales": "Ekspor penjualan (CSV)",
     "exportMembers": "Ekspor total anggota (CSV)"
   },
-  "catalog": { "title": "Katalog" },
-  "stamps": { "title": "Stamp rally", "scan": "Scan QR booth" },
-  "common": { "synced": "Tersinkron", "offline": "Offline", "soon": "Segera hadir", "back": "Kembali" }
+  "catalog": {
+    "title": "Katalog",
+    "by": "oleh {{name}}",
+    "empty": "Tidak ada produk yang cocok.",
+    "stampBanner": "Kumpulkan semua stamp, dapat hadiah",
+    "availability": { "available": "Tersedia", "almostGone": "Hampir habis", "soldOut": "Habis" }
+  },
+  "stamps": {
+    "title": "Stamp rally",
+    "scan": "Scan QR booth",
+    "ofTotal": "/ {{total}} stamp",
+    "toGo": "{{count}} lagi",
+    "complete": "Semua stamp terkumpul!",
+    "reward": "Sticker sheet eksklusif",
+    "unlocksAt": "Terbuka di {{total}} stamp",
+    "rewardReady": "Hadiah siap diambil!",
+    "showStaff": "Tunjukkan ke anggota booth. Kode kartu: {{code}}",
+    "cameraUnsupported": "Scan lewat kamera belum tersedia di sini. Scan QR booth dengan aplikasi kamera HP kamu, atau ketik kodenya di bawah.",
+    "cameraDenied": "Akses kamera diblokir. Scan QR booth dengan aplikasi kamera HP kamu, atau ketik kodenya di bawah.",
+    "enterCode": "Atau masukkan kode booth",
+    "submitCode": "Tambah",
+    "claim": {
+      "ok": "Stamp dari {{booth}} didapat!",
+      "duplicate": "Kamu sudah punya stamp {{booth}}.",
+      "unknown": "QR ini bukan bagian dari stamp rally.",
+      "viewCard": "Lihat kartu stamp"
+    },
+    "codes": {
+      "title": "Kode stamp",
+      "print": "Cetak QR",
+      "localWarning": "Kamu sedang di {{origin}}. Buka halaman ini dari situs asli sebelum mencetak, kalau tidak QR akan mengarah ke komputermu."
+    }
+  },
+  "common": {
+    "synced": "Tersinkron",
+    "offline": "Offline",
+    "soon": "Segera hadir",
+    "back": "Kembali",
+    "close": "Tutup"
+  }
 }

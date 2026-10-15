@@ -1,6 +1,7 @@
-import { Banknote, FileDown, QrCode, TriangleAlert, Landmark } from 'lucide-react'
+import { Banknote, ChevronRight, FileDown, Landmark, QrCode, TriangleAlert } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 import { AmberHeader } from '@/components/AmberHeader'
 import { MEMBER_KEYS, MEMBER_NAMES, MEMBER_TINT } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
@@ -136,6 +137,17 @@ export function SummaryPage() {
             <span>{attention.join(' · ')}</span>
           </div>
         )}
+
+        <Link
+          to="/staff/stamp-codes"
+          className="flex items-center justify-between rounded-card border border-border bg-surface p-4 text-sm font-semibold"
+        >
+          <span className="flex items-center gap-2">
+            <QrCode className="size-[18px] text-accent-text" />
+            {t('summary.stampCodes')}
+          </span>
+          <ChevronRight className="size-4 text-muted" />
+        </Link>
 
         <section className="flex flex-col gap-2.5 rounded-card border border-border bg-surface p-4">
           <h2 className="text-[15px] font-bold">{t('summary.closeDay')}</h2>
