@@ -1,10 +1,13 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
 import { StaffLayout, VisitorLayout } from '@/app/layouts'
-import { ComingSoonPage } from '@/features/ComingSoonPage'
+import { CatalogPage } from '@/features/catalog/CatalogPage'
 import { SalesPage } from '@/features/sales/SalesPage'
 import { CartProvider } from '@/features/sell/CartProvider'
 import { CheckoutPage } from '@/features/sell/CheckoutPage'
 import { SellPage } from '@/features/sell/SellPage'
+import { StampClaimPage } from '@/features/stamps/StampClaimPage'
+import { StampCodesPage } from '@/features/stamps/StampCodesPage'
+import { StampsPage } from '@/features/stamps/StampsPage'
 import { ProductFormPage } from '@/features/stock/ProductFormPage'
 import { StockPage } from '@/features/stock/StockPage'
 import { SummaryPage } from '@/features/summary/SummaryPage'
@@ -23,10 +26,12 @@ export default function App() {
             <Route path="stock/:id" element={<ProductFormPage />} />
             <Route path="sales" element={<SalesPage />} />
             <Route path="summary" element={<SummaryPage />} />
+            <Route path="stamp-codes" element={<StampCodesPage />} />
           </Route>
           <Route path="/visit" element={<VisitorLayout />}>
-            <Route index element={<ComingSoonPage titleKey="catalog.title" />} />
-            <Route path="stamps" element={<ComingSoonPage titleKey="stamps.title" />} />
+            <Route index element={<CatalogPage />} />
+            <Route path="stamps" element={<StampsPage />} />
+            <Route path="stamp/:token" element={<StampClaimPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/staff/sell" replace />} />
         </Routes>
