@@ -8,7 +8,20 @@
     "catalog": "Katalog",
     "stamps": "Stamp"
   },
-  "sell": { "title": "Jual", "search": "Cari produk", "reviewSale": "Cek pesanan", "items": "{{count}} barang" },
+  "sell": {
+    "title": "Jual",
+    "search": "Cari produk",
+    "reviewSale": "Cek pesanan",
+    "items": "{{count}} barang",
+    "cart": {
+      "title": "Penjualan saat ini",
+      "clear": "Hapus",
+      "sellingAs": "Menjual sebagai {{name}}",
+      "empty": "Ketuk produk untuk mulai penjualan.",
+      "confirm": "Konfirmasi penjualan"
+    }
+  },
+  "sync": { "synced": "Semua tersinkron", "pending": "{{count}} menunggu sinkron", "offline": "Offline" },
   "checkout": {
     "title": "Pembayaran",
     "empty": "Keranjang kosong. Tambah produk dari layar Jual.",

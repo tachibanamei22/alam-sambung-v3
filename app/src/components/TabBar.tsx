@@ -8,9 +8,14 @@ export interface TabItem {
   Icon: LucideIcon
 }
 
-export function TabBar({ items }: { items: TabItem[] }) {
+export function TabBar({ items, className }: { items: TabItem[]; className?: string }) {
   return (
-    <nav className="sticky bottom-0 print:hidden px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2">
+    <nav
+      className={cn(
+        'sticky bottom-0 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2 print:hidden',
+        className,
+      )}
+    >
       <ul className="flex h-[60px] items-stretch gap-1 rounded-full border border-border bg-surface p-1.5 shadow-lg shadow-black/10">
         {items.map(({ to, label, Icon }) => (
           <li key={to} className="flex-1">

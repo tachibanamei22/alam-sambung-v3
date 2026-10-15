@@ -8,7 +8,20 @@
     "catalog": "Catalog",
     "stamps": "Stamps"
   },
-  "sell": { "title": "Sell", "search": "Search products", "reviewSale": "Review sale", "items": "{{count}} items" },
+  "sell": {
+    "title": "Sell",
+    "search": "Search products",
+    "reviewSale": "Review sale",
+    "items": "{{count}} items",
+    "cart": {
+      "title": "Current sale",
+      "clear": "Clear",
+      "sellingAs": "Selling as {{name}}",
+      "empty": "Tap a product to start a sale.",
+      "confirm": "Confirm sale"
+    }
+  },
+  "sync": { "synced": "All synced", "pending": "{{count}} waiting to sync", "offline": "Offline" },
   "checkout": {
     "title": "Checkout",
     "empty": "The cart is empty. Add products from the Sell screen.",
