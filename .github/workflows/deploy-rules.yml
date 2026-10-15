@@ -1,0 +1,35 @@
+name: Deploy Firestore rules
+
+# Manual only. Publishes app/firestore.rules to the Firebase project so the
+# rules in git and the rules in the console cannot drift apart.
+# The service account needs the "Firebase Rules Admin" role (see README).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rules:
+    name: Publish rules
+    if: ${{ vars.FIREBASE_PROJECT_ID != '' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Write service account credentials
+        env:
+          SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          printf '%s' "$SERVICE_ACCOUNT" > "$RUNNER_TEMP/firebase-sa.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/firebase-sa.json" >> "$GITHUB_ENV"
+
+      - name: Deploy rules
+        run: npx --yes firebase-tools@latest deploy --only firestore:rules --project "${{ vars.FIREBASE_PROJECT_ID }}" --non-interactive

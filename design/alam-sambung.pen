@@ -59788,6 +59788,43 @@
           ]
         }
       ]
+    },
+    {
+      "type": "frame",
+      "id": "RoUcb",
+      "x": 242,
+      "y": 10433,
+      "name": "App Icon 512",
+      "clip": true,
+      "width": 512,
+      "height": 512,
+      "fill": "#FFC24B",
+      "layout": "vertical",
+      "gap": 14,
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "tzQsC",
+          "name": "AS",
+          "fill": "#2B1A08",
+          "content": "AS",
+          "fontFamily": "Outfit",
+          "fontSize": 232,
+          "fontWeight": "800",
+          "letterSpacing": -6
+        },
+        {
+          "type": "rectangle",
+          "cornerRadius": 10,
+          "id": "hgYse",
+          "name": "Underline",
+          "fill": "#E98C57",
+          "width": 150,
+          "height": 20
+        }
+      ]
     }
   ],
   "themes": {
