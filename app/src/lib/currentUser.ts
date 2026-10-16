@@ -2,6 +2,7 @@ import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebas
 import { useSyncExternalStore } from 'react'
 import { auth, firebaseEnabled } from './firebase'
 import { memberEmail, userFromEmail } from './identity'
+import { MEMBER_KEYS, isMemberKey } from './members'
 import type { MemberKey, Product, Role } from './types'
 
 export type AuthStatus = 'loading' | 'signedIn' | 'signedOut'
@@ -16,11 +17,19 @@ export interface CurrentUser {
 // the ownership rules can be exercised with the dev-only switcher.
 const KEY = 'as-user'
 
+const DEFAULT_MEMBER = MEMBER_KEYS[0]
+
 function loadLocal(): CurrentUser {
-  const fallback: CurrentUser = { memberKey: 'rina', role: 'member', status: 'signedIn' }
+  const fallback: CurrentUser = { memberKey: DEFAULT_MEMBER, role: 'member', status: 'signedIn' }
   try {
     const raw = localStorage.getItem(KEY)
-    if (raw) return { ...fallback, ...(JSON.parse(raw) as Partial<CurrentUser>), status: 'signedIn' }
+    if (raw) {
+      const saved = JSON.parse(raw) as Partial<CurrentUser>
+      // Ignore a saved member that no longer exists (the list can change).
+      const memberKey = isMemberKey(saved.memberKey) ? saved.memberKey : DEFAULT_MEMBER
+      const role = saved.role === 'admin' ? 'admin' : 'member'
+      return { memberKey, role, status: 'signedIn' }
+    }
   } catch {
     // fall through to default
   }
@@ -28,7 +37,7 @@ function loadLocal(): CurrentUser {
 }
 
 let user: CurrentUser = firebaseEnabled
-  ? { memberKey: 'rina', role: 'member', status: 'loading' }
+  ? { memberKey: DEFAULT_MEMBER, role: 'member', status: 'loading' }
   : loadLocal()
 const listeners = new Set<() => void>()
 

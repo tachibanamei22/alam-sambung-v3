@@ -36,7 +36,7 @@ function productsSnapshot(stock: Stock, fromCache: boolean, price = 45000) {
     docs: Object.entries(stock).map(([id, s]) => ({
       id,
       data: () => ({
-        owner: 'rina',
+        owner: 'tuesday',
         nameId: `Produk ${id}`,
         nameEn: `Product ${id}`,
         category: 'zine',

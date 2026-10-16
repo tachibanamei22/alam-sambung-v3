@@ -5,10 +5,10 @@ import { dateStamp, isSameDay, summarize } from './stats'
 
 const base: Sale = {
   id: 's1',
-  staffId: 'rina',
+  staffId: 'tuesday',
   items: [
-    { productId: 'p1', ownerId: 'rina', name: 'Zine Vol.1', qty: 2, unitPrice: 45000 },
-    { productId: 'p3', ownerId: 'dika', name: 'Acrylic Keychain', qty: 1, unitPrice: 30000 },
+    { productId: 'p1', ownerId: 'tuesday', name: 'Zine Vol.1', qty: 2, unitPrice: 45000 },
+    { productId: 'p3', ownerId: 'skye', name: 'Acrylic Keychain', qty: 1, unitPrice: 30000 },
   ],
   total: 120000,
   payment: 'cash',
@@ -23,15 +23,15 @@ describe('summarize', () => {
       payment: 'qris',
       pending: true,
       total: 15000,
-      items: [{ productId: 'p2', ownerId: 'rina', name: 'Sticker Pack', qty: 1, unitPrice: 15000 }],
+      items: [{ productId: 'p2', ownerId: 'tuesday', name: 'Sticker Pack', qty: 1, unitPrice: 15000 }],
     }
     const s = summarize([base, qris])
     expect(s.total).toBe(135000)
     expect(s.salesCount).toBe(2)
     expect(s.itemsSold).toBe(4)
     expect(s.byPayment).toEqual({ cash: 120000, qris: 15000, transfer: 0 })
-    expect(s.byMember.rina).toBe(105000)
-    expect(s.byMember.dika).toBe(30000)
+    expect(s.byMember.tuesday).toBe(105000)
+    expect(s.byMember.skye).toBe(30000)
     expect(s.pendingCount).toBe(1)
   })
 
@@ -66,15 +66,15 @@ describe('csv', () => {
     const lines = salesLinesCsv([base]).split('\r\n')
     expect(lines).toHaveLength(3)
     expect(lines[1]).toContain('Zine Vol.1')
-    expect(lines[1]).toContain('Rina')
+    expect(lines[1]).toContain('Tuesday')
     expect(lines[1]).toContain('90000')
   })
 
   it('writes member totals with a grand total', () => {
     const lines = memberTotalsCsv([base]).split('\r\n')
     expect(lines[0]).toBe('member,total_rp')
-    expect(lines).toContain('Rina,90000')
-    expect(lines).toContain('Dika,30000')
+    expect(lines).toContain('Tuesday,90000')
+    expect(lines).toContain('Skye,30000')
     expect(lines.at(-1)).toBe('TOTAL,120000')
   })
 })

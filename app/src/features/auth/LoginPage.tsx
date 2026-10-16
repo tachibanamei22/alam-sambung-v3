@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { AmberHeader } from '@/components/AmberHeader'
 import { signInWithPin } from '@/lib/currentUser'
 import { PIN_LENGTH, isValidPin } from '@/lib/identity'
-import { MEMBER_KEYS, MEMBER_NAMES, MEMBER_TINT } from '@/lib/members'
+import { MEMBER_KEYS, MEMBER_NAMES, MEMBER_TINT, memberInitial } from '@/lib/members'
 import type { MemberKey } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
@@ -68,7 +68,7 @@ export function LoginPage() {
                     MEMBER_TINT[key],
                   )}
                 >
-                  {MEMBER_NAMES[key][0]}
+                  {memberInitial(key)}
                 </span>
                 <span className="text-[15px] font-semibold">{MEMBER_NAMES[key]}</span>
               </button>

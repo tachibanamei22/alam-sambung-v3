@@ -47,22 +47,23 @@ on the device. Add the Firebase values below to switch to the shared backend.
 
    | Email | Password |
    |---|---|
-   | `rina@alamsambung.app` | her 6-digit PIN |
-   | `dika@alamsambung.app` | his/her 6-digit PIN |
-   | `sari@alamsambung.app` | ... |
-   | `bima@alamsambung.app` | ... |
+   | `tuesday@alamsambung.app` (admin) | Tuesday's 6-digit PIN |
+   | `skye@alamsambung.app` | Skye's 6-digit PIN |
+   | `llymochi@alamsambung.app` | llymochi's 6-digit PIN |
 
    Then Settings > User actions > turn **off** "Enable create (sign-up)" so
    nobody can add accounts from the app.
 4. **Firestore Database** > Create database > **production mode**, location
    `asia-southeast2` (Jakarta). Open the Rules tab and paste
    `app/firestore.rules`, then Publish.
-5. **Run the app**, sign in as the admin (Rina), open Stock and tap
+5. **Run the app**, sign in as the admin (Tuesday), open Stock and tap
    "Load sample products" if you want starter data.
 
-Members, the admin and the email domain are defined in
-`app/src/lib/members.ts` and `app/src/lib/identity.ts`; the same lists appear in
-`app/firestore.rules`. Change all three together.
+Members live in `app/src/lib/members.ts`, the admin in
+`app/src/lib/identity.ts`, and both lists are repeated at the top of
+`app/firestore.rules`. Change all three together; a unit test fails if they
+drift apart. To add a member: add the key and name in `members.ts`, add the
+key to the rules list, create their Firebase account, and republish the rules.
 
 ### How data is stored
 

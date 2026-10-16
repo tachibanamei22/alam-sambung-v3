@@ -3,9 +3,9 @@ import type { Product } from '@/lib/types'
 import { availabilityOf, buildCatalog, fingerprint } from './catalogDoc'
 
 const base: Product[] = [
-  { id: 'b', owner: 'dika', nameId: 'Kartu Pos', nameEn: 'Postcard', category: 'print', price: 25000, stock: 18 },
-  { id: 'a', owner: 'rina', nameId: 'Zine', nameEn: 'Zine', category: 'zine', price: 45000, stock: 12, photoUrl: 'data:x' },
-  { id: 'c', owner: 'rina', nameId: 'Stiker', nameEn: 'Sticker', category: 'sticker', price: 15000, stock: 0 },
+  { id: 'b', owner: 'skye', nameId: 'Kartu Pos', nameEn: 'Postcard', category: 'print', price: 25000, stock: 18 },
+  { id: 'a', owner: 'tuesday', nameId: 'Zine', nameEn: 'Zine', category: 'zine', price: 45000, stock: 12, photoUrl: 'data:x' },
+  { id: 'c', owner: 'tuesday', nameId: 'Stiker', nameEn: 'Sticker', category: 'sticker', price: 15000, stock: 0 },
 ]
 
 describe('availabilityOf', () => {
@@ -53,7 +53,7 @@ describe('buildCatalog', () => {
   it('stays far below the 1 MiB document limit for a few hundred products', () => {
     const many: Product[] = Array.from({ length: 400 }, (_, i) => ({
       id: `p${i}`,
-      owner: 'rina',
+      owner: 'tuesday',
       nameId: `Produk nomor ${i} dengan nama agak panjang`,
       nameEn: `Product number ${i} with a fairly long name`,
       category: 'print',

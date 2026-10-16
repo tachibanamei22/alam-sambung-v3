@@ -9,7 +9,7 @@ import { MEMBER_KEYS } from './members'
  * Keep ADMIN_KEYS in sync with `isAdmin()` in firestore.rules.
  */
 export const EMAIL_DOMAIN = 'alamsambung.app'
-export const ADMIN_KEYS: MemberKey[] = ['rina']
+export const ADMIN_KEYS: MemberKey[] = ['tuesday']
 export const PIN_LENGTH = 6
 
 export function memberEmail(key: MemberKey): string {

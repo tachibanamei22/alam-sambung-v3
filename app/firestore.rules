@@ -17,11 +17,11 @@ service cloud.firestore {
     function isMember() {
       return signedIn()
         && request.auth.token.email.matches('.*@alamsambung[.]app')
-        && memberKey() in ['rina', 'dika', 'sari', 'bima'];
+        && memberKey() in ['tuesday', 'skye', 'llymochi'];
     }
 
     function isAdmin() {
-      return isMember() && memberKey() in ['rina'];
+      return isMember() && memberKey() in ['tuesday'];
     }
 
     // Selling someone else's product only changes its stock count.

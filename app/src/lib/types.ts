@@ -1,6 +1,8 @@
-export type Role = 'member' | 'admin'
+import type { MemberKey } from './members'
 
-export type MemberKey = 'rina' | 'dika' | 'sari' | 'bima'
+export type { MemberKey }
+
+export type Role = 'member' | 'admin'
 
 export type PaymentMethod = 'cash' | 'qris' | 'transfer'
 
