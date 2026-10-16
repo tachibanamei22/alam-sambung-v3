@@ -67,27 +67,61 @@ export function CashPanel({ c, bare }: { c: Checkout; bare?: boolean }) {
       )}
     >
       {!bare && <span className="text-[15px] font-bold">{t('checkout.cashReceived')}</span>}
-      <div className="flex gap-2">
-        {c.quickAmounts.map((amount) => (
-          <button
-            key={amount}
-            type="button"
-            onClick={() => c.setReceived(amount)}
-            className={cn(
-              'h-10 flex-1 rounded-2xl border text-[13px] font-semibold',
-              c.cashReceived === amount
-                ? 'border-accent bg-soft text-accent-text'
-                : 'border-border bg-surface text-text',
-            )}
-          >
-            {amount === c.total ? t('checkout.exact') : amount.toLocaleString('id-ID')}
-          </button>
-        ))}
+
+      {/* Exact, then the nearest amounts a customer can pay with real notes. */}
+      <div className="flex gap-2" role="group" aria-label={t('checkout.cashReceived')}>
+        {c.quickAmounts.map((amount) => {
+          const active = !c.customActive && c.cashReceived === amount
+          return (
+            <button
+              key={amount}
+              type="button"
+              aria-pressed={active}
+              onClick={() => c.selectChip(amount)}
+              className={cn(
+                'h-10 min-w-0 flex-1 rounded-2xl border text-[13px] font-semibold',
+                active ? 'border-accent bg-soft text-accent-text' : 'border-border bg-surface text-text',
+              )}
+            >
+              {amount === c.total ? t('checkout.exact') : amount.toLocaleString('id-ID')}
+            </button>
+          )
+        })}
       </div>
-      <div className="flex items-center justify-between rounded-2xl bg-soft px-3.5 py-2.5">
-        <span className="text-[13px] font-semibold text-accent-text">{t('checkout.change')}</span>
-        <span className="font-head text-base font-bold text-accent-text">{formatRupiah(c.change)}</span>
-      </div>
+
+      <label
+        className={cn(
+          'flex h-11 items-center gap-2 rounded-2xl border bg-surface px-3.5 transition-colors focus-within:border-accent',
+          c.customActive ? 'border-accent' : 'border-border',
+        )}
+      >
+        <span className="text-sm font-semibold text-muted">Rp</span>
+        <input
+          inputMode="numeric"
+          aria-label={t('checkout.customAmount')}
+          placeholder={t('checkout.customAmount')}
+          value={c.customText ? Number(c.customText).toLocaleString('id-ID') : ''}
+          onChange={(e) => c.setCustom(e.target.value)}
+          className="min-w-0 flex-1 bg-transparent text-[15px] outline-none placeholder:text-muted"
+        />
+      </label>
+
+      {c.short > 0 ? (
+        <div
+          role="alert"
+          className="flex animate-enter items-center justify-between rounded-2xl bg-warn/15 px-3.5 py-2.5"
+        >
+          <span className="text-[13px] font-semibold text-warn">{t('checkout.short')}</span>
+          <span className="font-head text-base font-bold text-warn">{formatRupiah(c.short)}</span>
+        </div>
+      ) : (
+        <div className="flex items-center justify-between rounded-2xl bg-soft px-3.5 py-2.5">
+          <span className="text-[13px] font-semibold text-accent-text">{t('checkout.change')}</span>
+          <span key={c.change} className="animate-fade-in font-head text-base font-bold text-accent-text">
+            {formatRupiah(c.change)}
+          </span>
+        </div>
+      )}
     </section>
   )
 }
