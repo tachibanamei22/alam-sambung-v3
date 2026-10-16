@@ -1,7 +1,8 @@
-import { Camera, X } from 'lucide-react'
+import { Camera } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import { BottomSheet } from '@/components/ui/bottom-sheet'
 import { parseStampToken } from './booths'
 
 interface Detector {
@@ -20,16 +21,33 @@ function cameraSupported(): boolean {
 }
 
 interface ScanSheetProps {
+  open: boolean
   onToken: (token: string) => void
   onClose: () => void
+}
+
+export function ScanSheet({ open, onToken, onClose }: ScanSheetProps) {
+  const { t } = useTranslation()
+  return (
+    <BottomSheet
+      open={open}
+      onOpenChange={(next) => {
+        if (!next) onClose()
+      }}
+      title={t('stamps.scan')}
+    >
+      <ScanBody onToken={onToken} />
+    </BottomSheet>
+  )
 }
 
 /**
  * Camera scanning uses the BarcodeDetector API where the browser has it.
  * Everywhere else visitors can use their phone's camera app (the QR opens the
- * stamp link) or type the short code printed under the QR.
+ * stamp link) or type the short code printed under the QR. Mounted only while
+ * the sheet is open, so the camera is released as soon as it closes.
  */
-export function ScanSheet({ onToken, onClose }: ScanSheetProps) {
+function ScanBody({ onToken }: { onToken: (token: string) => void }) {
   const { t } = useTranslation()
   const videoRef = useRef<HTMLVideoElement>(null)
   const [camera, setCamera] = useState<CameraState>(() => (cameraSupported() ? 'starting' : 'unsupported'))
@@ -83,57 +101,43 @@ export function ScanSheet({ onToken, onClose }: ScanSheetProps) {
   }
 
   return (
-    <div className="fixed inset-0 z-20 flex items-end justify-center bg-black/60" role="dialog" aria-modal="true">
-      <div className="flex w-full max-w-[520px] flex-col gap-4 rounded-t-[32px] bg-bg p-5 pb-8">
-        <div className="flex items-center justify-between">
-          <h2 className="font-head text-xl font-bold">{t('stamps.scan')}</h2>
+    <>
+      {camera === 'on' || camera === 'starting' ? (
+        <video
+          ref={videoRef}
+          muted
+          playsInline
+          className="aspect-square w-full rounded-[24px] bg-black object-cover"
+        />
+      ) : (
+        <div className="flex flex-col items-center gap-2 rounded-card border border-border bg-surface p-5 text-center text-sm text-muted">
+          <Camera className="size-6 text-accent-text" />
+          {camera === 'denied' ? t('stamps.cameraDenied') : t('stamps.cameraUnsupported')}
+        </div>
+      )}
+
+      <form onSubmit={submit} className="flex flex-col gap-2">
+        <label className="text-xs font-semibold text-muted" htmlFor="stamp-code">
+          {t('stamps.enterCode')}
+        </label>
+        <div className="flex gap-2">
+          <input
+            id="stamp-code"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            autoCapitalize="none"
+            autoCorrect="off"
+            placeholder="as-booth-name"
+            className="h-12 min-w-0 flex-1 rounded-2xl border border-border bg-surface px-3.5 text-[15px] outline-none transition-colors focus:border-accent"
+          />
           <button
-            type="button"
-            aria-label={t('common.close')}
-            onClick={onClose}
-            className="flex size-9 items-center justify-center rounded-full bg-soft"
+            type="submit"
+            className="h-12 rounded-2xl bg-accent px-5 text-sm font-bold text-on-accent"
           >
-            <X className="size-[18px]" />
+            {t('stamps.submitCode')}
           </button>
         </div>
-
-        {camera === 'on' || camera === 'starting' ? (
-          <video
-            ref={videoRef}
-            muted
-            playsInline
-            className="aspect-square w-full rounded-[24px] bg-black object-cover"
-          />
-        ) : (
-          <div className="flex flex-col items-center gap-2 rounded-card border border-border bg-surface p-5 text-center text-sm text-muted">
-            <Camera className="size-6 text-accent-text" />
-            {camera === 'denied' ? t('stamps.cameraDenied') : t('stamps.cameraUnsupported')}
-          </div>
-        )}
-
-        <form onSubmit={submit} className="flex flex-col gap-2">
-          <label className="text-xs font-semibold text-muted" htmlFor="stamp-code">
-            {t('stamps.enterCode')}
-          </label>
-          <div className="flex gap-2">
-            <input
-              id="stamp-code"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              autoCapitalize="none"
-              autoCorrect="off"
-              placeholder="as-booth-name"
-              className="h-12 min-w-0 flex-1 rounded-2xl border border-border bg-surface px-3.5 text-[15px] outline-none focus:border-accent"
-            />
-            <button
-              type="submit"
-              className="h-12 rounded-2xl bg-accent px-5 text-sm font-bold text-on-accent"
-            >
-              {t('stamps.submitCode')}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+      </form>
+    </>
   )
 }

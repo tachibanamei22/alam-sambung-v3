@@ -13,6 +13,8 @@
     "search": "Cari produk",
     "reviewSale": "Cek pesanan",
     "items": "{{count}} barang",
+    "addOne": "Tambah satu",
+    "removeOne": "Kurangi satu",
     "cart": {
       "title": "Penjualan saat ini",
       "clear": "Hapus",
@@ -61,6 +63,8 @@
     "signIn": "Masuk",
     "signOut": "Keluar",
     "signedInAs": "Masuk sebagai {{name}}",
+    "continue": "Lanjut",
+    "demoNote": "Mode demo: tanpa PIN. Data tersimpan di perangkat ini.",
     "hint": "Butuh koneksi internet saat pertama kali masuk di perangkat ini.",
     "errors": {
       "wrong": "PIN salah. Coba lagi.",
@@ -127,6 +131,7 @@
   },
   "catalog": {
     "title": "Katalog",
+    "details": "Detail produk",
     "by": "oleh {{name}}",
     "empty": "Tidak ada produk yang cocok.",
     "stampBanner": "Kumpulkan semua stamp, dapat hadiah",
@@ -164,5 +169,20 @@
     "soon": "Segera hadir",
     "back": "Kembali",
     "close": "Tutup"
+  },
+  "toast": {
+    "saleSaved": "Penjualan tersimpan · {{total}}",
+    "saleVoided": "Penjualan dibatalkan, stok dikembalikan",
+    "productSaved": "Produk tersimpan",
+    "productDeleted": "Produk dihapus"
+  },
+  "account": {
+    "menu": "Menu akun",
+    "language": "Bahasa",
+    "theme": "Tema",
+    "light": "Terang",
+    "dark": "Gelap",
+    "switchMember": "Ganti anggota",
+    "demoHint": "Mode demo: belum terhubung ke server."
   }
 }

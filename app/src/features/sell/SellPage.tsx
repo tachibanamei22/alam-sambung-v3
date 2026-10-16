@@ -47,7 +47,14 @@ export function SellPage() {
     <div className="flex flex-1 lg:h-dvh">
       <div className="flex min-w-0 flex-1 flex-col lg:overflow-y-auto">
         <AmberHeader
-          eyebrow={t('app.name')}
+          // On a phone the sync state sits in the label above the title;
+          // tablets have room for the full pill.
+          eyebrow={
+            <span className="flex items-center gap-2">
+              {t('app.name')}
+              <SyncPill inline className="flex lg:hidden" />
+            </span>
+          }
           title={t('sell.title')}
           actions={<SyncPill className="hidden lg:flex" />}
         >
@@ -86,28 +93,38 @@ export function SellPage() {
               {t('catalog.empty')}
             </p>
           )}
-          {visible.map((p) => (
-            <ProductCard
+          {visible.map((p, i) => (
+            <div
               key={p.id}
-              name={nameOf(p)}
-              owner={p.owner}
-              ownerName={MEMBER_NAMES[p.owner]}
-              category={p.category}
-              photoUrl={p.photoUrl}
-              price={p.price}
-              stock={p.stock}
-              qty={cart.qty[p.id] ?? 0}
-              onAdd={() => cart.add(p.id, p.stock)}
-            />
+              className="animate-enter"
+              style={{ animationDelay: `${Math.min(i, 10) * 30}ms` }}
+            >
+              <ProductCard
+                name={nameOf(p)}
+                owner={p.owner}
+                ownerName={MEMBER_NAMES[p.owner]}
+                category={p.category}
+                photoUrl={p.photoUrl}
+                price={p.price}
+                stock={p.stock}
+                qty={cart.qty[p.id] ?? 0}
+                onAdd={() => cart.add(p.id, p.stock)}
+                onRemove={() => cart.decrement(p.id)}
+                addLabel={t('sell.addOne')}
+                removeLabel={t('sell.removeOne')}
+              />
+            </div>
           ))}
         </section>
 
         {cart.count > 0 && (
-          <div className="sticky bottom-[84px] px-4 pb-2 pt-2 lg:hidden">
-            <div className="flex items-center justify-between rounded-[28px] bg-cart py-3 pl-5 pr-3">
+          <div className="sticky bottom-[84px] animate-enter px-4 pb-2 pt-2 lg:hidden">
+            <div className="flex items-center justify-between rounded-[28px] bg-cart py-3 pl-5 pr-3 shadow-lg shadow-black/20">
               <div className="flex flex-col">
                 <span className="text-xs text-cart-sub">{t('sell.items', { count: cart.count })}</span>
-                <span className="font-head text-xl font-bold text-cart-text">{formatRupiah(total)}</span>
+                <span key={total} className="animate-fade-in font-head text-xl font-bold text-cart-text">
+                  {formatRupiah(total)}
+                </span>
               </div>
               <button
                 type="button"

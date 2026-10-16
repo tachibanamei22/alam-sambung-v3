@@ -4,26 +4,35 @@ import { useSales } from '@/features/sales/salesStore'
 import { useOnline } from '@/lib/useOnline'
 import { cn } from '@/lib/utils'
 
+interface SyncPillProps {
+  className?: string
+  /** Plain icon and text with no background, for tight spots such as a header label. */
+  inline?: boolean
+}
+
 /** Connection and sync state: offline, sales waiting to sync, or all synced. */
-export function SyncPill({ className }: { className?: string }) {
+export function SyncPill({ className, inline }: SyncPillProps) {
   const { t } = useTranslation()
   const online = useOnline()
   const pending = useSales().filter((s) => s.pending).length
 
-  const { Icon, label } = !online
-    ? { Icon: WifiOff, label: t('sync.offline') }
+  const { Icon, label, tone } = !online
+    ? { Icon: WifiOff, label: t('sync.offline'), tone: 'text-warn' }
     : pending > 0
-      ? { Icon: CloudOff, label: t('sync.pending', { count: pending }) }
-      : { Icon: CloudCheck, label: t('sync.synced') }
+      ? { Icon: CloudOff, label: t('sync.pending', { count: pending }), tone: 'text-warn' }
+      : { Icon: CloudCheck, label: t('sync.synced'), tone: 'text-text' }
 
   return (
     <span
+      role="status"
       className={cn(
-        'items-center gap-1.5 rounded-full bg-glass px-3 py-2 text-xs font-semibold text-text',
+        'shrink-0 items-center gap-1.5 whitespace-nowrap text-xs font-semibold',
+        inline ? 'font-bold' : 'rounded-full bg-glass px-3 py-2',
+        tone,
         className ?? 'flex',
       )}
     >
-      <Icon className="size-3.5" />
+      <Icon className="size-3.5 shrink-0" />
       {label}
     </span>
   )

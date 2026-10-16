@@ -1,4 +1,5 @@
 import { ArrowLeft, WifiOff } from 'lucide-react'
+import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { AmberHeader } from '@/components/AmberHeader'
@@ -13,7 +14,11 @@ export function CheckoutPage() {
   const c = useCheckout()
 
   function confirm() {
-    if (c.confirm()) void navigate('/staff/sales')
+    const total = c.total
+    if (c.confirm()) {
+      toast.success(t('toast.saleSaved', { total: formatRupiah(total) }))
+      void navigate('/staff/sales')
+    }
   }
 
   return (

@@ -6,7 +6,6 @@ import { TabBar } from '@/components/TabBar'
 import type { TabItem } from '@/components/TabBar'
 import { LoginPage } from '@/features/auth/LoginPage'
 import { useCurrentUser } from '@/lib/currentUser'
-import { firebaseEnabled } from '@/lib/firebase'
 import { cn } from '@/lib/utils'
 
 interface ShellProps {
@@ -18,6 +17,7 @@ interface ShellProps {
 }
 
 function Shell({ tabs, tablet, narrow }: ShellProps) {
+  const { pathname } = useLocation()
   return (
     <div
       className={cn(
@@ -32,7 +32,8 @@ function Shell({ tabs, tablet, narrow }: ShellProps) {
           tablet && narrow && 'lg:mx-auto lg:w-full lg:max-w-[720px]',
         )}
       >
-        <main className="flex flex-1 flex-col">
+        {/* Keyed by route so each screen fades and rises in when you navigate. */}
+        <main key={pathname} className="flex flex-1 animate-enter flex-col">
           <Outlet />
         </main>
         <TabBar items={tabs} className={tablet ? 'lg:hidden' : undefined} />
@@ -51,10 +52,10 @@ export function StaffLayout() {
     { to: '/staff/sales', label: t('nav.sales'), Icon: Receipt },
     { to: '/staff/summary', label: t('nav.summary'), Icon: ChartColumn },
   ]
-  if (firebaseEnabled && user.status === 'loading') {
+  if (user.status === 'loading') {
     return <div className="flex min-h-dvh items-center justify-center bg-bg text-sm text-muted">…</div>
   }
-  if (firebaseEnabled && user.status === 'signedOut') return <LoginPage />
+  if (user.status === 'signedOut') return <LoginPage />
   return <Shell tabs={tabs} tablet narrow={!pathname.startsWith('/staff/sell')} />
 }
 

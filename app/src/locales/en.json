@@ -13,6 +13,8 @@
     "search": "Search products",
     "reviewSale": "Review sale",
     "items": "{{count}} items",
+    "addOne": "Add one",
+    "removeOne": "Remove one",
     "cart": {
       "title": "Current sale",
       "clear": "Clear",
@@ -61,6 +63,8 @@
     "signIn": "Sign in",
     "signOut": "Sign out",
     "signedInAs": "Signed in as {{name}}",
+    "continue": "Continue",
+    "demoNote": "Demo mode: no PIN needed. Data stays on this device.",
     "hint": "You need a connection the first time you sign in on a device.",
     "errors": {
       "wrong": "That PIN is not right. Try again.",
@@ -127,6 +131,7 @@
   },
   "catalog": {
     "title": "Catalog",
+    "details": "Product details",
     "by": "by {{name}}",
     "empty": "No products match your search.",
     "stampBanner": "Collect all stamps, get a prize",
@@ -164,5 +169,20 @@
     "soon": "Coming soon",
     "back": "Back",
     "close": "Close"
+  },
+  "toast": {
+    "saleSaved": "Sale saved · {{total}}",
+    "saleVoided": "Sale voided and stock restored",
+    "productSaved": "Product saved",
+    "productDeleted": "Product deleted"
+  },
+  "account": {
+    "menu": "Account menu",
+    "language": "Language",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "switchMember": "Switch member",
+    "demoHint": "Demo mode: no backend connected."
   }
 }

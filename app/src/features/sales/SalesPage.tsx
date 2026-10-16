@@ -1,7 +1,9 @@
 import { Ban, ChevronDown, CloudOff, Paperclip } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 import { AmberHeader } from '@/components/AmberHeader'
+import { SyncPill } from '@/components/SyncPill'
 import { useCurrentUser } from '@/lib/currentUser'
 import { MEMBER_NAMES } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
@@ -53,12 +55,20 @@ export function SalesPage() {
   const now = useNow()
 
   function confirmVoid(sale: Sale) {
-    if (window.confirm(t('sales.confirmVoid'))) voidSale(sale.id)
+    if (window.confirm(t('sales.confirmVoid')) && voidSale(sale.id)) toast(t('toast.saleVoided'))
   }
 
   return (
     <>
-      <AmberHeader eyebrow={t('app.name')} title={t('sales.title')}>
+      <AmberHeader
+        eyebrow={
+          <span className="flex items-center gap-2">
+            {t('app.name')}
+            <SyncPill inline />
+          </span>
+        }
+        title={t('sales.title')}
+      >
         <div className="flex flex-wrap gap-2" role="radiogroup" aria-label={t('sales.filter')}>
           {FILTERS.map((f) => (
             <button
