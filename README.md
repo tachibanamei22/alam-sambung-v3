@@ -54,6 +54,7 @@ on the device. Add the Firebase values below to switch to the shared backend.
    | `tuesday@alamsambung.app` (admin) | Tuesday's password |
    | `skye@alamsambung.app` | Skye's password |
    | `llymochi@alamsambung.app` | llymochi's password |
+   | `ela@alamsambung.app` | Ela's password |
 
    Then Settings > User actions > turn **off** "Enable create (sign-up)" so
    nobody can add accounts from the app.

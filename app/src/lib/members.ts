@@ -4,7 +4,7 @@
  * (a unit test fails if they drift apart). The key is lowercase and becomes
  * the login email `<key>@alamsambung.app`.
  */
-export const MEMBER_KEYS = ['tuesday', 'skye', 'llymochi'] as const
+export const MEMBER_KEYS = ['tuesday', 'skye', 'llymochi', 'ela'] as const
 
 export type MemberKey = (typeof MEMBER_KEYS)[number]
 
@@ -12,6 +12,7 @@ export const MEMBER_NAMES: Record<MemberKey, string> = {
   tuesday: 'Tuesday',
   skye: 'Skye',
   llymochi: 'llymochi',
+  ela: 'Ela',
 }
 
 /** One letter for avatars. */
