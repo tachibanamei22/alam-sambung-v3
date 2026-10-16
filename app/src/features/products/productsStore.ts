@@ -10,6 +10,7 @@ import {
 } from 'firebase/firestore'
 import { useSyncExternalStore } from 'react'
 import { db, firebaseEnabled } from '@/lib/firebase'
+import { isMemberKey } from '@/lib/members'
 import type { Product } from '@/lib/types'
 
 // With Firebase configured, Firestore is the source of truth and its offline
@@ -18,20 +19,24 @@ import type { Product } from '@/lib/types'
 const KEY = 'as-products'
 
 export const SEED_PRODUCTS: Product[] = [
-  { id: 'p1', owner: 'rina', nameId: 'Zine Vol.1', nameEn: 'Zine Vol.1', category: 'zine', price: 45000, stock: 12 },
-  { id: 'p2', owner: 'rina', nameId: 'Paket Stiker', nameEn: 'Sticker Pack', category: 'sticker', price: 15000, stock: 40 },
-  { id: 'p3', owner: 'dika', nameId: 'Gantungan Akrilik', nameEn: 'Acrylic Keychain', category: 'accessory', price: 30000, stock: 3 },
-  { id: 'p4', owner: 'dika', nameId: 'Set Kartu Pos', nameEn: 'Postcard Set', category: 'print', price: 25000, stock: 18 },
-  { id: 'p5', owner: 'sari', nameId: 'Art Print A4', nameEn: 'Art Print A4', category: 'print', price: 50000, stock: 9 },
-  { id: 'p6', owner: 'sari', nameId: 'Pin Enamel', nameEn: 'Enamel Pin', category: 'accessory', price: 35000, stock: 0 },
-  { id: 'p7', owner: 'bima', nameId: 'Tote Bag', nameEn: 'Tote Bag', category: 'merch', price: 85000, stock: 6 },
-  { id: 'p8', owner: 'bima', nameId: 'Poster A3', nameEn: 'Poster A3', category: 'print', price: 40000, stock: 14 },
+  { id: 'p1', owner: 'tuesday', nameId: 'Zine Vol.1', nameEn: 'Zine Vol.1', category: 'zine', price: 45000, stock: 12 },
+  { id: 'p2', owner: 'tuesday', nameId: 'Paket Stiker', nameEn: 'Sticker Pack', category: 'sticker', price: 15000, stock: 40 },
+  { id: 'p3', owner: 'skye', nameId: 'Gantungan Akrilik', nameEn: 'Acrylic Keychain', category: 'accessory', price: 30000, stock: 3 },
+  { id: 'p4', owner: 'skye', nameId: 'Set Kartu Pos', nameEn: 'Postcard Set', category: 'print', price: 25000, stock: 18 },
+  { id: 'p5', owner: 'llymochi', nameId: 'Art Print A4', nameEn: 'Art Print A4', category: 'print', price: 50000, stock: 9 },
+  { id: 'p6', owner: 'llymochi', nameId: 'Pin Enamel', nameEn: 'Enamel Pin', category: 'accessory', price: 35000, stock: 0 },
+  { id: 'p7', owner: 'llymochi', nameId: 'Tote Bag', nameEn: 'Tote Bag', category: 'merch', price: 85000, stock: 6 },
+  { id: 'p8', owner: 'llymochi', nameId: 'Poster A3', nameEn: 'Poster A3', category: 'print', price: 40000, stock: 14 },
 ]
 
 function loadLocal(): Product[] {
   try {
     const raw = localStorage.getItem(KEY)
-    if (raw) return JSON.parse(raw) as Product[]
+    if (raw) {
+      const saved = JSON.parse(raw) as Product[]
+      // Drop data saved for members that no longer exist (the list can change).
+      if (saved.every((p) => isMemberKey(p.owner))) return saved
+    }
   } catch {
     // fall through to seed data
   }

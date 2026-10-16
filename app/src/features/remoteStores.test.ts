@@ -57,7 +57,7 @@ describe('products in Firebase mode', () => {
   it('writes a product document without the id field or undefined values', () => {
     saveProduct({
       id: 'p9',
-      owner: 'rina',
+      owner: 'tuesday',
       nameId: 'Pin',
       nameEn: 'Pin',
       category: 'accessory',
@@ -92,8 +92,8 @@ describe('products in Firebase mode', () => {
 describe('sales in Firebase mode', () => {
   const sale = {
     id: 's1',
-    staffId: 'rina',
-    items: [{ productId: 'a', ownerId: 'rina', name: 'Zine', qty: 1, unitPrice: 45000 }],
+    staffId: 'tuesday',
+    items: [{ productId: 'a', ownerId: 'tuesday', name: 'Zine', qty: 1, unitPrice: 45000 }],
     total: 45000,
     payment: 'qris' as const,
     proofDataUrl: 'data:image/jpeg;base64,AAAA',
@@ -106,7 +106,7 @@ describe('sales in Firebase mode', () => {
     const proof = calls.setDoc.find((c) => c.path === 'proofs/s1')
     const saleDoc = calls.setDoc.find((c) => c.path === 'sales/s1')
     expect(proof?.data).toEqual({ dataUrl: 'data:image/jpeg;base64,AAAA' })
-    expect(saleDoc?.data).toMatchObject({ hasProof: true, total: 45000, staffId: 'rina' })
+    expect(saleDoc?.data).toMatchObject({ hasProof: true, total: 45000, staffId: 'tuesday' })
     expect(saleDoc?.data).not.toHaveProperty('proofDataUrl')
     expect(saleDoc?.data).not.toHaveProperty('pending')
     expect(saleDoc?.data).not.toHaveProperty('id')

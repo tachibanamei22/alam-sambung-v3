@@ -5,7 +5,7 @@ import { Link } from 'react-router'
 import { AmberHeader } from '@/components/AmberHeader'
 import { signOutUser, useCurrentUser } from '@/lib/currentUser'
 import { firebaseEnabled } from '@/lib/firebase'
-import { MEMBER_KEYS, MEMBER_NAMES, MEMBER_TINT } from '@/lib/members'
+import { MEMBER_BAR, MEMBER_KEYS, MEMBER_NAMES, MEMBER_TINT, memberInitial } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
 import { cn } from '@/lib/utils'
 import { useNow } from '@/lib/useNow'
@@ -15,13 +15,6 @@ import { useSales } from '../sales/salesStore'
 import { dateStamp, isSameDay, summarize } from '../sales/stats'
 
 type Scope = 'today' | 'all'
-
-const BAR_COLOR: Record<(typeof MEMBER_KEYS)[number], string> = {
-  rina: 'bg-m-rina-fg',
-  dika: 'bg-m-dika-fg',
-  sari: 'bg-m-sari-fg',
-  bima: 'bg-m-bima-fg',
-}
 
 export function SummaryPage() {
   const { t } = useTranslation()
@@ -116,7 +109,7 @@ export function SummaryPage() {
                   MEMBER_TINT[key],
                 )}
               >
-                {MEMBER_NAMES[key][0]}
+                {memberInitial(key)}
               </span>
               <div className="flex flex-1 flex-col gap-1.5">
                 <div className="flex justify-between text-[13px]">
@@ -125,7 +118,7 @@ export function SummaryPage() {
                 </div>
                 <div className="h-1.5 rounded-full bg-soft">
                   <div
-                    className={cn('h-1.5 rounded-full', BAR_COLOR[key])}
+                    className={cn('h-1.5 rounded-full', MEMBER_BAR[key])}
                     style={{ width: `${Math.round((summary.byMember[key] / maxMember) * 100)}%` }}
                   />
                 </div>

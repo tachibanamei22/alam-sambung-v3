@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { CATEGORY_ICONS } from '@/lib/categories'
 import { useCurrentUser } from '@/lib/currentUser'
-import { MEMBER_NAMES, MEMBER_TINT } from '@/lib/members'
+import { MEMBER_NAMES, MEMBER_TINT, memberInitial } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
 import { cn } from '@/lib/utils'
 import { CashPanel, PaymentSwitch, ProofPanel, QtyStepper } from './CheckoutParts'
@@ -35,7 +35,7 @@ export function CartPanel() {
             MEMBER_TINT[user.memberKey],
           )}
         >
-          {MEMBER_NAMES[user.memberKey][0]}
+          {memberInitial(user.memberKey)}
         </span>
         <span className="text-[13px] font-semibold">
           {t('sell.cart.sellingAs', { name: MEMBER_NAMES[user.memberKey] })}
