@@ -112,6 +112,16 @@
   /* Between lg (1024) and xl (1280): lets a 1180px tablet show 4 product columns. */
   --breakpoint-wide: 68.75rem;
 
+  /* Motion tokens. Used as `animate-enter`, `animate-pop`, ... */
+  --animate-enter: enter 240ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  --animate-fade-in: fade-in 180ms ease-out both;
+  --animate-fade-out: fade-out 140ms ease-in both;
+  --animate-pop: pop 260ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-sheet-in: sheet-in 300ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  --animate-sheet-out: sheet-out 200ms ease-in both;
+  --animate-menu-in: menu-in 160ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  --animate-menu-out: menu-out 110ms ease-in both;
+
   --radius-card: 24px;
   --radius-control: 16px;
 }
@@ -127,4 +137,85 @@ body {
   color: var(--text);
   font-family: var(--font-body);
   -webkit-tap-highlight-color: transparent;
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes pop {
+  0% {
+    transform: scale(0.6);
+  }
+  60% {
+    transform: scale(1.18);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+}
+@keyframes sheet-out {
+  to {
+    transform: translateY(100%);
+  }
+}
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.96);
+  }
+}
+@keyframes menu-out {
+  to {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+}
+
+/* Press feedback: controls dip slightly while held. Kept in the base layer
+   so utility classes can still override it. */
+@layer base {
+  button,
+  [role='button'],
+  a[href] {
+    transition:
+      transform 120ms ease,
+      background-color 160ms ease,
+      border-color 160ms ease,
+      color 160ms ease,
+      opacity 160ms ease;
+  }
+  button:not(:disabled):active,
+  [role='button']:not([aria-disabled='true']):active {
+    transform: scale(0.97);
+  }
+}
+
+/* Respect the system "reduce motion" setting. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

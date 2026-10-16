@@ -1,7 +1,7 @@
 import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { useSyncExternalStore } from 'react'
 import { auth, firebaseEnabled } from './firebase'
-import { memberEmail, userFromEmail } from './identity'
+import { memberEmail, roleOf, userFromEmail } from './identity'
 import { MEMBER_KEYS, isMemberKey } from './members'
 import type { MemberKey, Product, Role } from './types'
 
@@ -13,37 +13,49 @@ export interface CurrentUser {
   status: AuthStatus
 }
 
-// Local mode (no Firebase): the user is a placeholder kept on the device so
-// the ownership rules can be exercised with the dev-only switcher.
-const KEY = 'as-user'
+/** True when there is no Firebase config: data stays on the device and sign-in has no PIN. */
+export const demoMode = !firebaseEnabled
 
 const DEFAULT_MEMBER = MEMBER_KEYS[0]
 
-function loadLocal(): CurrentUser {
-  const fallback: CurrentUser = { memberKey: DEFAULT_MEMBER, role: 'member', status: 'signedIn' }
+// Demo mode keeps who is "signed in" on the device so the sign-in and
+// sign-out flow can be tried without a backend. The role always comes from
+// the member (see ADMIN_KEYS), exactly as it does with real accounts.
+const KEY = 'as-user'
+
+function build(memberKey: MemberKey, status: AuthStatus): CurrentUser {
+  return { memberKey, role: roleOf(memberKey), status }
+}
+
+function loadDemo(): CurrentUser {
   try {
     const raw = localStorage.getItem(KEY)
     if (raw) {
-      const saved = JSON.parse(raw) as Partial<CurrentUser>
+      const saved = JSON.parse(raw) as { memberKey?: unknown; signedOut?: unknown }
       // Ignore a saved member that no longer exists (the list can change).
       const memberKey = isMemberKey(saved.memberKey) ? saved.memberKey : DEFAULT_MEMBER
-      const role = saved.role === 'admin' ? 'admin' : 'member'
-      return { memberKey, role, status: 'signedIn' }
+      return build(memberKey, saved.signedOut === true ? 'signedOut' : 'signedIn')
     }
   } catch {
     // fall through to default
   }
-  return fallback
+  return build(DEFAULT_MEMBER, 'signedIn')
 }
 
-let user: CurrentUser = firebaseEnabled
-  ? { memberKey: DEFAULT_MEMBER, role: 'member', status: 'loading' }
-  : loadLocal()
+let user: CurrentUser = firebaseEnabled ? build(DEFAULT_MEMBER, 'loading') : loadDemo()
 const listeners = new Set<() => void>()
 
 function set(next: CurrentUser) {
   user = next
   for (const listener of listeners) listener()
+}
+
+function persistDemo(memberKey: MemberKey, signedOut: boolean) {
+  try {
+    localStorage.setItem(KEY, JSON.stringify({ memberKey, signedOut }))
+  } catch {
+    // ignore: the choice just won't persist
+  }
 }
 
 export function getCurrentUser(): CurrentUser {
@@ -61,17 +73,6 @@ export function useCurrentUser(): CurrentUser {
   return useSyncExternalStore(subscribeCurrentUser, getCurrentUser)
 }
 
-/** Local mode only: act as another member or the admin. */
-export function setCurrentUser(next: { memberKey: MemberKey; role: Role }) {
-  if (firebaseEnabled) return
-  set({ ...next, status: 'signedIn' })
-  try {
-    localStorage.setItem(KEY, JSON.stringify(next))
-  } catch {
-    // ignore: the choice just won't persist
-  }
-}
-
 /** Start listening to Firebase Auth. Safe to call once at startup. */
 export function initAuth() {
   const firebaseAuth = auth
@@ -83,17 +84,27 @@ export function initAuth() {
       void signOut(firebaseAuth)
       return
     }
-    set(identity ? { ...identity, status: 'signedIn' } : { ...user, status: 'signedOut' })
+    set(identity ? build(identity.memberKey, 'signedIn') : build(user.memberKey, 'signedOut'))
   })
 }
 
-export async function signInWithPin(memberKey: MemberKey, pin: string) {
-  if (!auth) throw new Error('Firebase is not configured')
+/** Sign in with a member and PIN (Firebase), or just the member in demo mode. */
+export async function signIn(memberKey: MemberKey, pin: string) {
+  if (!auth) {
+    set(build(memberKey, 'signedIn'))
+    persistDemo(memberKey, false)
+    return
+  }
   await signInWithEmailAndPassword(auth, memberEmail(memberKey), pin)
 }
 
 export async function signOutUser() {
-  if (auth) await signOut(auth)
+  if (auth) {
+    await signOut(auth)
+    return
+  }
+  set(build(user.memberKey, 'signedOut'))
+  persistDemo(user.memberKey, true)
 }
 
 /** Members edit their own products; the admin edits everything. */

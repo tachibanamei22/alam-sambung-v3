@@ -106,7 +106,7 @@ export function StampsPage() {
         </button>
       </div>
 
-      {scanning && <ScanSheet onToken={onToken} onClose={() => setScanning(false)} />}
+      <ScanSheet open={scanning} onToken={onToken} onClose={() => setScanning(false)} />
     </>
   )
 }

@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
+import { AppToaster } from './components/AppToaster'
 import './lib/i18n'
 import { startApp } from './lib/sync'
 import { ThemeProvider } from './lib/theme'
@@ -12,6 +13,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider>
       <App />
+      <AppToaster />
     </ThemeProvider>
   </StrictMode>,
 )

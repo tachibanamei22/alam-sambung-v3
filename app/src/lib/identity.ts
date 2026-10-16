@@ -16,13 +16,18 @@ export function memberEmail(key: MemberKey): string {
   return `${key}@${EMAIL_DOMAIN}`
 }
 
+/** Admins edit everything; everyone else edits their own products. */
+export function roleOf(key: MemberKey): Role {
+  return ADMIN_KEYS.includes(key) ? 'admin' : 'member'
+}
+
 export function userFromEmail(email: string | null | undefined): { memberKey: MemberKey; role: Role } | null {
   if (!email) return null
   const [local, domain] = email.toLowerCase().split('@')
   if (domain !== EMAIL_DOMAIN) return null
   const memberKey = MEMBER_KEYS.find((k) => k === local)
   if (!memberKey) return null
-  return { memberKey, role: ADMIN_KEYS.includes(memberKey) ? 'admin' : 'member' }
+  return { memberKey, role: roleOf(memberKey) }
 }
 
 export function isValidPin(pin: string): boolean {

@@ -9,9 +9,7 @@ import { MEMBER_NAMES, MEMBER_TINT } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
 import { useProductName } from '@/lib/productName'
 import { cn } from '@/lib/utils'
-import { firebaseEnabled } from '@/lib/firebase'
 import { adjustStock, seedSampleProducts, useProducts } from '../products/productsStore'
-import { DevUserSwitcher } from './DevUserSwitcher'
 
 type Scope = 'mine' | 'all'
 
@@ -160,7 +158,6 @@ export function StockPage() {
           })}
         </section>
 
-        {!firebaseEnabled && import.meta.env.DEV && <DevUserSwitcher />}
       </div>
 
       <div className="sticky bottom-[84px] px-4 pb-2 pt-2">

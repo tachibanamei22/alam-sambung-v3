@@ -1,10 +1,8 @@
-import { Banknote, ChevronRight, FileDown, Landmark, LogOut, QrCode, TriangleAlert } from 'lucide-react'
+import { Banknote, ChevronRight, FileDown, Landmark, QrCode, TriangleAlert } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { AmberHeader } from '@/components/AmberHeader'
-import { signOutUser, useCurrentUser } from '@/lib/currentUser'
-import { firebaseEnabled } from '@/lib/firebase'
 import { MEMBER_BAR, MEMBER_KEYS, MEMBER_NAMES, MEMBER_TINT, memberInitial } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
 import { cn } from '@/lib/utils'
@@ -18,7 +16,6 @@ type Scope = 'today' | 'all'
 
 export function SummaryPage() {
   const { t } = useTranslation()
-  const user = useCurrentUser()
   const allSales = useSales()
   const products = useProducts()
   const [scope, setScope] = useState<Scope>('today')
@@ -131,22 +128,6 @@ export function SummaryPage() {
           <div className="flex items-start gap-2.5 rounded-[20px] bg-soft p-3.5 text-[13px] font-semibold text-warn">
             <TriangleAlert className="mt-0.5 size-[18px] shrink-0" />
             <span>{attention.join(' · ')}</span>
-          </div>
-        )}
-
-        {firebaseEnabled && (
-          <div className="flex items-center justify-between rounded-card border border-border bg-surface p-4">
-            <span className="text-sm text-muted">
-              {t('auth.signedInAs', { name: MEMBER_NAMES[user.memberKey] })}
-            </span>
-            <button
-              type="button"
-              onClick={() => void signOutUser()}
-              className="flex items-center gap-1.5 text-sm font-semibold text-danger"
-            >
-              <LogOut className="size-4" />
-              {t('auth.signOut')}
-            </button>
           </div>
         )}
 

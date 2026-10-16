@@ -1,8 +1,11 @@
 import { ArrowLeft, Camera, Lock, Trash2 } from 'lucide-react'
 import { useRef, useState } from 'react'
+import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate, useNavigate, useParams } from 'react-router'
+import { toast } from 'sonner'
 import { AmberHeader } from '@/components/AmberHeader'
+import { Select } from '@/components/ui/select'
 import { CATEGORY_IDS } from '@/lib/categories'
 import { canEditProduct, useCurrentUser } from '@/lib/currentUser'
 import { compressImage } from '@/lib/image'
@@ -22,14 +25,15 @@ interface FormState {
 }
 
 const inputClass =
-  'h-12 w-full rounded-2xl border border-border bg-surface px-3.5 text-[15px] text-text outline-none focus:border-accent'
+  'h-12 w-full rounded-2xl border border-border bg-surface px-3.5 text-[15px] text-text outline-none transition-colors focus:border-accent'
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+/** `grow` is for fields sharing a row; in a column they must not stretch. */
+function Field({ label, grow, children }: { label: string; grow?: boolean; children: ReactNode }) {
   return (
-    <label className="flex min-w-0 flex-1 flex-col gap-1.5">
+    <div className={cn('flex min-w-0 flex-col gap-1.5', grow && 'flex-1')}>
       <span className="text-xs font-semibold text-muted">{label}</span>
       {children}
-    </label>
+    </div>
   )
 }
 
@@ -93,6 +97,7 @@ export function ProductFormPage() {
       photoUrl: form.photoUrl,
     }
     saveProduct(product)
+    toast.success(t('toast.productSaved'))
     void navigate('/staff/stock')
   }
 
@@ -100,6 +105,7 @@ export function ProductFormPage() {
     if (!existing) return
     if (window.confirm(t('form.confirmDelete'))) {
       removeProduct(existing.id)
+      toast(t('toast.productDeleted'))
       void navigate('/staff/stock')
     }
   }
@@ -146,14 +152,14 @@ export function ProductFormPage() {
         </button>
 
         <div className="flex gap-3">
-          <Field label={t('form.nameId')}>
+          <Field label={t('form.nameId')} grow>
             <input
               className={inputClass}
               value={form.nameId}
               onChange={(e) => set('nameId', e.target.value)}
             />
           </Field>
-          <Field label={t('form.nameEn')}>
+          <Field label={t('form.nameEn')} grow>
             <input
               className={inputClass}
               value={form.nameEn}
@@ -165,17 +171,12 @@ export function ProductFormPage() {
 
         <Field label={t('form.member')}>
           {user.role === 'admin' ? (
-            <select
-              className={inputClass}
+            <Select
+              aria-label={t('form.member')}
               value={form.owner}
-              onChange={(e) => set('owner', e.target.value as MemberKey)}
-            >
-              {MEMBER_KEYS.map((k) => (
-                <option key={k} value={k}>
-                  {MEMBER_NAMES[k]}
-                </option>
-              ))}
-            </select>
+              onValueChange={(v) => set('owner', v as MemberKey)}
+              options={MEMBER_KEYS.map((k) => ({ value: k, label: MEMBER_NAMES[k] }))}
+            />
           ) : (
             <div className={cn(inputClass, 'flex items-center justify-between bg-soft text-muted')}>
               {MEMBER_NAMES[existing?.owner ?? user.memberKey]} ({t('form.you')})
@@ -185,7 +186,7 @@ export function ProductFormPage() {
         </Field>
 
         <div className="flex gap-3">
-          <Field label={t('form.price')}>
+          <Field label={t('form.price')} grow>
             <input
               className={inputClass}
               inputMode="numeric"
@@ -194,7 +195,7 @@ export function ProductFormPage() {
               onChange={(e) => set('price', e.target.value.replace(/\D/g, ''))}
             />
           </Field>
-          <Field label={t('form.stock')}>
+          <Field label={t('form.stock')} grow>
             <input
               className={inputClass}
               inputMode="numeric"
@@ -208,17 +209,12 @@ export function ProductFormPage() {
         {submitted && errors.stock && <p className="text-xs text-danger">{t('form.errors.stock')}</p>}
 
         <Field label={t('form.category')}>
-          <select
-            className={inputClass}
+          <Select
+            aria-label={t('form.category')}
             value={form.category}
-            onChange={(e) => set('category', e.target.value as CategoryId)}
-          >
-            {CATEGORY_IDS.map((c) => (
-              <option key={c} value={c}>
-                {t(`categories.${c}`)}
-              </option>
-            ))}
-          </select>
+            onValueChange={(v) => set('category', v as CategoryId)}
+            options={CATEGORY_IDS.map((c) => ({ value: c, label: t(`categories.${c}`) }))}
+          />
         </Field>
 
         {isEdit && (

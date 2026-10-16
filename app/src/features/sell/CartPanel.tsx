@@ -1,3 +1,4 @@
+import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 import { CATEGORY_ICONS } from '@/lib/categories'
 import { useCurrentUser } from '@/lib/currentUser'
@@ -12,6 +13,11 @@ export function CartPanel() {
   const { t } = useTranslation()
   const user = useCurrentUser()
   const c = useCheckout()
+
+  function confirm() {
+    const total = c.total
+    if (c.confirm()) toast.success(t('toast.saleSaved', { total: formatRupiah(total) }))
+  }
 
   return (
     <div className="flex h-full flex-col gap-4 p-6">
@@ -47,7 +53,7 @@ export function CartPanel() {
         {c.items.map(({ product, qty }) => {
           const Icon = CATEGORY_ICONS[product.category]
           return (
-            <div key={product.id} className="flex items-center gap-2.5">
+            <div key={product.id} className="flex animate-enter items-center gap-2.5">
               <span
                 className={cn(
                   'flex size-10 shrink-0 items-center justify-center rounded-[14px]',
@@ -73,7 +79,9 @@ export function CartPanel() {
 
       <div className="flex items-center justify-between border-t border-border pt-3.5">
         <span className="text-sm text-muted">{t('checkout.total')}</span>
-        <span className="font-head text-[28px] font-bold">{formatRupiah(c.total)}</span>
+        <span key={c.total} className="animate-fade-in font-head text-[28px] font-bold">
+          {formatRupiah(c.total)}
+        </span>
       </div>
 
       <PaymentSwitch c={c} />
@@ -82,7 +90,7 @@ export function CartPanel() {
       <button
         type="button"
         disabled={!c.canConfirm}
-        onClick={() => c.confirm()}
+        onClick={confirm}
         className="h-14 w-full rounded-[20px] bg-accent text-base font-bold text-on-accent disabled:opacity-40"
       >
         {t('sell.cart.confirm')}

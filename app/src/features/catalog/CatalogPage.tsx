@@ -1,8 +1,9 @@
-import { ArrowRight, Search, X } from 'lucide-react'
+import { ArrowRight, Search } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { AmberHeader } from '@/components/AmberHeader'
+import { BottomSheet } from '@/components/ui/bottom-sheet'
 import { CATEGORY_ICONS } from '@/lib/categories'
 import { MEMBER_KEYS, MEMBER_NAMES, MEMBER_TINT } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
@@ -19,7 +20,7 @@ type MemberFilter = 'all' | MemberKey
 function Thumb({ item, photo, className }: { item: CatalogItem; photo?: string | null; className?: string }) {
   const Icon = CATEGORY_ICONS[item.category]
   return photo ? (
-    <img src={photo} alt="" className={cn('object-cover', className)} />
+    <img src={photo} alt="" className={cn('animate-fade-in object-cover', className)} />
   ) : (
     <div className={cn('flex items-center justify-center', MEMBER_TINT[item.owner], className)}>
       <Icon className="size-[30px]" />
@@ -27,8 +28,8 @@ function Thumb({ item, photo, className }: { item: CatalogItem; photo?: string |
   )
 }
 
-/** Detail sheet. The photo is fetched here, only for the product being viewed. */
-function ProductSheet({ item, onClose }: { item: CatalogItem; onClose: () => void }) {
+/** Sheet content. The photo is fetched here, only for the product being viewed. */
+function ProductDetails({ item }: { item: CatalogItem }) {
   const { t } = useTranslation()
   const nameOf = useProductName()
   const [photo, setPhoto] = useState<string | null>(null)
@@ -48,48 +49,28 @@ function ProductSheet({ item, onClose }: { item: CatalogItem; onClose: () => voi
   }, [item.id])
 
   return (
-    <div
-      className="fixed inset-0 z-20 flex items-end justify-center bg-black/50"
-      role="dialog"
-      aria-modal="true"
-      onClick={onClose}
-    >
-      <div
-        className="flex w-full max-w-[520px] flex-col gap-4 rounded-t-[32px] bg-bg p-5 pb-8"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex justify-end">
-          <button
-            type="button"
-            aria-label={t('common.close')}
-            onClick={onClose}
-            className="flex size-9 items-center justify-center rounded-full bg-soft"
-          >
-            <X className="size-[18px]" />
-          </button>
-        </div>
-        <Thumb item={item} photo={photo} className="h-48 w-full rounded-[24px]" />
-        <div className="flex flex-col gap-1">
-          <h2 className="font-head text-2xl font-bold">{nameOf(item)}</h2>
-          <p className="text-sm text-muted">
-            {t('catalog.by', { name: MEMBER_NAMES[item.owner] })} · {t(`categories.${item.category}`)}
-          </p>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="rounded-full bg-sticker px-3.5 py-1.5 font-head text-lg font-bold text-on-sticker">
-            {formatRupiah(item.price)}
-          </span>
-          <span
-            className={cn(
-              'text-sm font-semibold',
-              item.status === 'available' ? 'text-accent-text' : 'text-warn',
-            )}
-          >
-            {t(`catalog.availability.${item.status}`)}
-          </span>
-        </div>
+    <>
+      <Thumb item={item} photo={photo} className="h-48 w-full rounded-[24px]" />
+      <div className="flex flex-col gap-1">
+        <h3 className="font-head text-2xl font-bold">{nameOf(item)}</h3>
+        <p className="text-sm text-muted">
+          {t('catalog.by', { name: MEMBER_NAMES[item.owner] })} · {t(`categories.${item.category}`)}
+        </p>
       </div>
-    </div>
+      <div className="flex items-center justify-between">
+        <span className="rounded-full bg-sticker px-3.5 py-1.5 font-head text-lg font-bold text-on-sticker">
+          {formatRupiah(item.price)}
+        </span>
+        <span
+          className={cn(
+            'text-sm font-semibold',
+            item.status === 'available' ? 'text-accent-text' : 'text-warn',
+          )}
+        >
+          {t(`catalog.availability.${item.status}`)}
+        </span>
+      </div>
+    </>
   )
 }
 
@@ -100,7 +81,9 @@ export function CatalogPage() {
   const nameOf = useProductName()
   const [query, setQuery] = useState('')
   const [member, setMember] = useState<MemberFilter>('all')
+  // `selected` stays set while the sheet slides away, so it never empties mid-animation.
   const [selected, setSelected] = useState<CatalogItem | null>(null)
+  const [sheetOpen, setSheetOpen] = useState(false)
 
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -168,13 +151,17 @@ export function CatalogPage() {
           </p>
         ) : (
           <section className="grid grid-cols-2 gap-3">
-            {visible.map((p) => (
+            {visible.map((p, i) => (
               <button
                 key={p.id}
                 type="button"
-                onClick={() => setSelected(p)}
+                onClick={() => {
+                  setSelected(p)
+                  setSheetOpen(true)
+                }}
+                style={{ animationDelay: `${Math.min(i, 10) * 30}ms` }}
                 className={cn(
-                  'flex flex-col gap-2.5 rounded-card border border-border bg-surface p-2.5 text-left',
+                  'flex animate-enter flex-col gap-2.5 rounded-card border border-border bg-surface p-2.5 text-left',
                   p.status === 'soldOut' && 'opacity-50',
                 )}
               >
@@ -200,7 +187,11 @@ export function CatalogPage() {
         )}
       </div>
 
-      {selected && <ProductSheet item={selected} onClose={() => setSelected(null)} />}
+      {selected && (
+        <BottomSheet open={sheetOpen} onOpenChange={setSheetOpen} title={t('catalog.details')}>
+          <ProductDetails item={selected} />
+        </BottomSheet>
+      )}
     </>
   )
 }
