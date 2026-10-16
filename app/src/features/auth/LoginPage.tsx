@@ -1,10 +1,10 @@
-import { LogIn } from 'lucide-react'
+import { Eye, EyeOff, LogIn } from 'lucide-react'
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AmberHeader } from '@/components/AmberHeader'
 import { demoMode, signIn } from '@/lib/currentUser'
-import { PIN_LENGTH, isValidPin } from '@/lib/identity'
+import { isValidPassword } from '@/lib/identity'
 import { MEMBER_KEYS, MEMBER_NAMES, MEMBER_TINT, memberInitial } from '@/lib/members'
 import type { MemberKey } from '@/lib/types'
 import { cn } from '@/lib/utils'
@@ -19,15 +19,16 @@ function errorKind(error: unknown): LoginError {
   return 'generic'
 }
 
-/** Staff sign in: pick your name, enter your 6-digit PIN (demo mode skips the PIN). */
+/** Staff sign in: pick your name, enter your password (demo mode skips the password). */
 export function LoginPage() {
   const { t } = useTranslation()
   const [member, setMember] = useState<MemberKey | null>(null)
-  const [pin, setPin] = useState('')
+  const [password, setPassword] = useState('')
+  const [visible, setVisible] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<LoginError>(null)
 
-  const canSubmit = member !== null && (demoMode || isValidPin(pin)) && !busy
+  const canSubmit = member !== null && (demoMode || isValidPassword(password)) && !busy
 
   async function submit(e: FormEvent) {
     e.preventDefault()
@@ -35,10 +36,10 @@ export function LoginPage() {
     setBusy(true)
     setError(null)
     try {
-      await signIn(member, pin)
+      await signIn(member, password)
     } catch (err) {
       setError(errorKind(err))
-      setPin('')
+      setPassword('')
     } finally {
       setBusy(false)
     }
@@ -80,16 +81,28 @@ export function LoginPage() {
           <p className="rounded-2xl bg-soft p-3.5 text-[13px] text-accent-text">{t('auth.demoNote')}</p>
         ) : (
           <label className="flex flex-col gap-2">
-            <span className="text-sm font-semibold text-muted">{t('auth.pin', { length: PIN_LENGTH })}</span>
-            <input
-              type="password"
-              inputMode="numeric"
-              autoComplete="current-password"
-              maxLength={PIN_LENGTH}
-              value={pin}
-              onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))}
-              className="h-14 w-full rounded-2xl border border-border bg-surface px-4 text-center text-2xl tracking-[0.6em] outline-none transition-colors focus:border-accent"
-            />
+            <span className="text-sm font-semibold text-muted">{t('auth.password')}</span>
+            <span className="relative">
+              <input
+                type={visible ? 'text' : 'password'}
+                autoComplete="current-password"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="h-14 w-full rounded-2xl border border-border bg-surface pl-4 pr-12 text-lg outline-none transition-colors focus:border-accent"
+              />
+              <button
+                type="button"
+                aria-label={visible ? t('auth.hidePassword') : t('auth.showPassword')}
+                aria-pressed={visible}
+                onClick={() => setVisible((v) => !v)}
+                className="absolute right-2 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full text-muted"
+              >
+                {visible ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+              </button>
+            </span>
           </label>
         )}
 

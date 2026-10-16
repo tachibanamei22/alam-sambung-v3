@@ -13,7 +13,7 @@ export interface CurrentUser {
   status: AuthStatus
 }
 
-/** True when there is no Firebase config: data stays on the device and sign-in has no PIN. */
+/** True when there is no Firebase config: data stays on the device and sign-in has no password. */
 export const demoMode = !firebaseEnabled
 
 const DEFAULT_MEMBER = MEMBER_KEYS[0]
@@ -88,14 +88,14 @@ export function initAuth() {
   })
 }
 
-/** Sign in with a member and PIN (Firebase), or just the member in demo mode. */
-export async function signIn(memberKey: MemberKey, pin: string) {
+/** Sign in with a member and password (Firebase), or just the member in demo mode. */
+export async function signIn(memberKey: MemberKey, password: string) {
   if (!auth) {
     set(build(memberKey, 'signedIn'))
     persistDemo(memberKey, false)
     return
   }
-  await signInWithEmailAndPassword(auth, memberEmail(memberKey), pin)
+  await signInWithEmailAndPassword(auth, memberEmail(memberKey), password)
 }
 
 export async function signOutUser() {
