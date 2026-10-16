@@ -12,12 +12,13 @@ interface ShellProps {
   tabs: TabItem[]
   /** Staff pages use a nav rail and the full width on tablets. */
   tablet?: boolean
-  /** Constrain content width on tablets (everything except the sell station). */
+  /** Centre the page content in a readable column on tablets (all but the sell station). */
   narrow?: boolean
 }
 
 function Shell({ tabs, tablet, narrow }: ShellProps) {
   const { pathname } = useLocation()
+  const column = tablet && narrow
   return (
     <div
       className={cn(
@@ -26,14 +27,26 @@ function Shell({ tabs, tablet, narrow }: ShellProps) {
       )}
     >
       {tablet && <NavRail items={tabs} />}
-      <div
-        className={cn(
-          'flex min-w-0 flex-1 flex-col',
-          tablet && narrow && 'lg:mx-auto lg:w-full lg:max-w-[720px]',
-        )}
-      >
-        {/* Keyed by route so each screen fades and rises in when you navigate. */}
-        <main key={pathname} className="flex flex-1 animate-enter flex-col">
+      <div className="flex min-w-0 flex-1 flex-col">
+        {/*
+          Keyed by route so each screen fades in when you navigate (fade only:
+          sliding the page made the whole layout, header included, look like
+          it was shaking).
+
+          On tablets the amber header spans the whole area next to the rail on
+          every page; the content below it sits in a centred 720px column. The
+          header reads `data-narrow` through the `page` group to line its own
+          content up with that column.
+        */}
+        <main
+          key={pathname}
+          data-narrow={column ? 'true' : undefined}
+          className={cn(
+            'group/page flex flex-1 animate-fade-in flex-col',
+            column &&
+              'lg:[&>*:not(header)]:mx-auto lg:[&>*:not(header)]:w-full lg:[&>*:not(header)]:max-w-[720px]',
+          )}
+        >
           <Outlet />
         </main>
         <TabBar items={tabs} className={tablet ? 'lg:hidden' : undefined} />

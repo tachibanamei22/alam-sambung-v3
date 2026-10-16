@@ -48,7 +48,7 @@ export function CartPanel() {
         </span>
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col gap-3.5 overflow-y-auto">
+      <div className="scrollbar-stable flex min-h-0 flex-1 flex-col gap-3.5 overflow-y-auto">
         {c.items.length === 0 && <p className="text-sm text-muted">{t('sell.cart.empty')}</p>}
         {c.items.map(({ product, qty }) => {
           const Icon = CATEGORY_ICONS[product.category]

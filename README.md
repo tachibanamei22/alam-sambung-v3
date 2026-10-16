@@ -24,6 +24,10 @@ npm run dev
 
 Useful scripts: `npm run build`, `npm run lint`, `npm test`, `npm run preview`.
 
+`npm run dev:demo` starts the app on port 5175 in demo mode even when
+`.env.local` exists (no login password, data stays on the device), handy for
+trying screens without touching the real project.
+
 With no Firebase config the app runs in **local mode**: no login, data stays
 on the device. Add the Firebase values below to switch to the shared backend.
 

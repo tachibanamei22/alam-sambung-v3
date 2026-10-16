@@ -23,22 +23,26 @@ export function AmberHeader({ eyebrow, title, children, actions }: AmberHeaderPr
   const hasAccount = useCurrentUser().status === 'signedIn' && isStaffPage
 
   return (
-    <header className="flex flex-col gap-4 rounded-b-[32px] bg-amber px-5 pb-5 pt-[max(1.25rem,env(safe-area-inset-top))] print:hidden">
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex min-w-0 flex-col">
-          <span className="truncate text-xs font-bold text-text">{eyebrow}</span>
-          <h1 className="truncate font-head text-[30px] font-bold leading-tight text-text">{title}</h1>
-        </div>
-        <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
-          {actions}
-          <div className={cn('items-center gap-2', hasAccount ? 'hidden sm:flex' : 'flex')}>
-            <LangToggle />
-            <ThemeToggle />
+    // The band always spans its parent. On tablet column pages the parent sets
+    // data-narrow, and the inner wrapper then lines up with the 720px column.
+    <header className="rounded-b-[32px] bg-amber px-5 pb-5 pt-[max(1.25rem,env(safe-area-inset-top))] print:hidden lg:px-7">
+      <div className="mx-auto flex w-full flex-col gap-4 lg:group-data-[narrow=true]/page:max-w-[720px] lg:group-data-[narrow=true]/page:px-0">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex min-w-0 flex-col">
+            <span className="truncate text-xs font-bold text-text">{eyebrow}</span>
+            <h1 className="truncate font-head text-[30px] font-bold leading-tight text-text">{title}</h1>
           </div>
-          {hasAccount && <AccountMenu />}
+          <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+            {actions}
+            <div className={cn('items-center gap-2', hasAccount ? 'hidden sm:flex' : 'flex')}>
+              <LangToggle />
+              <ThemeToggle />
+            </div>
+            {hasAccount && <AccountMenu />}
+          </div>
         </div>
+        {children}
       </div>
-      {children}
     </header>
   )
 }

@@ -7,6 +7,7 @@ import { BottomSheet } from '@/components/ui/bottom-sheet'
 import { CATEGORY_ICONS } from '@/lib/categories'
 import { MEMBER_KEYS, MEMBER_NAMES, MEMBER_TINT } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
+import { useIntroPhase } from '@/lib/useIntroPhase'
 import { useProductName } from '@/lib/productName'
 import type { MemberKey } from '@/lib/types'
 import { cn } from '@/lib/utils'
@@ -79,6 +80,7 @@ export function CatalogPage() {
   const { items, loading } = useCatalog()
   const stamps = useStamps()
   const nameOf = useProductName()
+  const intro = useIntroPhase()
   const [query, setQuery] = useState('')
   const [member, setMember] = useState<MemberFilter>('all')
   // `selected` stays set while the sheet slides away, so it never empties mid-animation.
@@ -159,9 +161,10 @@ export function CatalogPage() {
                   setSelected(p)
                   setSheetOpen(true)
                 }}
-                style={{ animationDelay: `${Math.min(i, 10) * 30}ms` }}
+                style={intro ? { animationDelay: `${Math.min(i, 10) * 30}ms` } : undefined}
                 className={cn(
-                  'flex animate-enter flex-col gap-2.5 rounded-card border border-border bg-surface p-2.5 text-left',
+                  'flex flex-col gap-2.5 rounded-card border border-border bg-surface p-2.5 text-left',
+                  intro && 'animate-enter',
                   p.status === 'soldOut' && 'opacity-50',
                 )}
               >
