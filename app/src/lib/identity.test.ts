@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { ADMIN_KEYS, EMAIL_DOMAIN, isValidPin, memberEmail, userFromEmail } from './identity'
+import { ADMIN_KEYS, EMAIL_DOMAIN, isValidPassword, memberEmail, userFromEmail } from './identity'
 import { MEMBER_KEYS, MEMBER_NAMES, MEMBER_TINT, isMemberKey, memberInitial } from './members'
 
 describe('identity', () => {
@@ -29,11 +29,16 @@ describe('identity', () => {
     expect(userFromEmail(null)).toBeNull()
   })
 
-  it('accepts only 6-digit PINs', () => {
-    expect(isValidPin('123456')).toBe(true)
-    expect(isValidPin('12345')).toBe(false)
-    expect(isValidPin('1234567')).toBe(false)
-    expect(isValidPin('12a456')).toBe(false)
+  it('accepts any password of at least 6 characters, including a numeric PIN', () => {
+    expect(isValidPassword('123456')).toBe(true)
+    expect(isValidPassword('correct horse battery')).toBe(true)
+    expect(isValidPassword('p@ss w0rd!')).toBe(true)
+  })
+
+  it('rejects passwords that Firebase would refuse', () => {
+    expect(isValidPassword('')).toBe(false)
+    expect(isValidPassword('12345')).toBe(false)
+    expect(isValidPassword('x'.repeat(129))).toBe(false)
   })
 })
 

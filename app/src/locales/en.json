@@ -59,15 +59,17 @@
   "auth": {
     "title": "Sign in",
     "who": "Who is selling?",
-    "pin": "Your {{length}}-digit PIN",
+    "password": "Password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
     "signIn": "Sign in",
     "signOut": "Sign out",
     "signedInAs": "Signed in as {{name}}",
     "continue": "Continue",
-    "demoNote": "Demo mode: no PIN needed. Data stays on this device.",
+    "demoNote": "Demo mode: no password needed. Data stays on this device.",
     "hint": "You need a connection the first time you sign in on a device.",
     "errors": {
-      "wrong": "That PIN is not right. Try again.",
+      "wrong": "That password is not right. Try again.",
       "offline": "No connection. Connect to the internet to sign in.",
       "generic": "Could not sign in. Please try again."
     }

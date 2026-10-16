@@ -42,14 +42,14 @@ on the device. Add the Firebase values below to switch to the shared backend.
    VITE_FIREBASE_APP_ID=...
    ```
 3. **Authentication** > Get started > Sign-in method > enable **Email/Password**
-   (not "Email link"). Then Users > Add user, one per member, with the PIN as
-   the password (6 digits, Firebase's minimum is 6 characters):
+   (not "Email link"). Then Users > Add user, one per member. Any password of
+   at least 6 characters works (a 6-digit PIN is fine too):
 
    | Email | Password |
    |---|---|
-   | `tuesday@alamsambung.app` (admin) | Tuesday's 6-digit PIN |
-   | `skye@alamsambung.app` | Skye's 6-digit PIN |
-   | `llymochi@alamsambung.app` | llymochi's 6-digit PIN |
+   | `tuesday@alamsambung.app` (admin) | Tuesday's password |
+   | `skye@alamsambung.app` | Skye's password |
+   | `llymochi@alamsambung.app` | llymochi's password |
 
    Then Settings > User actions > turn **off** "Enable create (sign-up)" so
    nobody can add accounts from the app.
@@ -157,7 +157,7 @@ The icon is the "App Icon 512" frame in `design/alam-sambung.pen`, exported to
 | Fonts | Outfit (headings), DM Sans (body) via Fontsource |
 | i18n | i18next (`src/locales/id.json`, `en.json`) |
 | Offline / PWA | vite-plugin-pwa + Firestore persistent cache |
-| Backend | Firebase Auth (PIN login), Firestore, Hosting |
+| Backend | Firebase Auth (name + password login), Firestore, Hosting |
 
 ## Design tokens
 

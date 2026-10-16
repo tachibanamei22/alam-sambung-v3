@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 import { useLocation } from 'react-router'
+import { useCurrentUser } from '@/lib/currentUser'
+import { cn } from '@/lib/utils'
 import { AccountMenu } from './AccountMenu'
 import { LangToggle } from './LangToggle'
 import { ThemeToggle } from './ThemeToggle'
@@ -14,9 +16,11 @@ interface AmberHeaderProps {
 }
 
 export function AmberHeader({ eyebrow, title, children, actions }: AmberHeaderProps) {
-  // Staff pages get the account menu (language and theme live there on
-  // phones); visitor pages have no account, so they keep the plain toggles.
-  const staff = useLocation().pathname.startsWith('/staff')
+  // Signed-in staff get the account menu (language and theme live there on
+  // phones). Visitors and the sign-in screen have no account, so they keep
+  // the plain toggles.
+  const isStaffPage = useLocation().pathname.startsWith('/staff')
+  const hasAccount = useCurrentUser().status === 'signedIn' && isStaffPage
 
   return (
     <header className="flex flex-col gap-4 rounded-b-[32px] bg-amber px-5 pb-5 pt-[max(1.25rem,env(safe-area-inset-top))] print:hidden">
@@ -27,20 +31,11 @@ export function AmberHeader({ eyebrow, title, children, actions }: AmberHeaderPr
         </div>
         <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
           {actions}
-          {staff ? (
-            <>
-              <div className="hidden items-center gap-2 sm:flex">
-                <LangToggle />
-                <ThemeToggle />
-              </div>
-              <AccountMenu />
-            </>
-          ) : (
-            <>
-              <LangToggle />
-              <ThemeToggle />
-            </>
-          )}
+          <div className={cn('items-center gap-2', hasAccount ? 'hidden sm:flex' : 'flex')}>
+            <LangToggle />
+            <ThemeToggle />
+          </div>
+          {hasAccount && <AccountMenu />}
         </div>
       </div>
       {children}

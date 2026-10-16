@@ -1,7 +1,7 @@
 import path from 'node:path'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
@@ -31,5 +31,16 @@ export default defineConfig({
   ],
   resolve: {
     alias: { '@': path.resolve(import.meta.dirname, 'src') },
+  },
+  test: {
+    // Tests must not depend on a developer's .env.local: with no Firebase
+    // config the app runs in demo mode, which is what they exercise.
+    env: {
+      VITE_FIREBASE_API_KEY: '',
+      VITE_FIREBASE_AUTH_DOMAIN: '',
+      VITE_FIREBASE_PROJECT_ID: '',
+      VITE_FIREBASE_MESSAGING_SENDER_ID: '',
+      VITE_FIREBASE_APP_ID: '',
+    },
   },
 })

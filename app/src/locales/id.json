@@ -59,15 +59,17 @@
   "auth": {
     "title": "Masuk",
     "who": "Siapa yang jualan?",
-    "pin": "PIN {{length}} digit kamu",
+    "password": "Kata sandi",
+    "showPassword": "Tampilkan kata sandi",
+    "hidePassword": "Sembunyikan kata sandi",
     "signIn": "Masuk",
     "signOut": "Keluar",
     "signedInAs": "Masuk sebagai {{name}}",
     "continue": "Lanjut",
-    "demoNote": "Mode demo: tanpa PIN. Data tersimpan di perangkat ini.",
+    "demoNote": "Mode demo: tanpa kata sandi. Data tersimpan di perangkat ini.",
     "hint": "Butuh koneksi internet saat pertama kali masuk di perangkat ini.",
     "errors": {
-      "wrong": "PIN salah. Coba lagi.",
+      "wrong": "Kata sandi salah. Coba lagi.",
       "offline": "Tidak ada koneksi. Sambungkan internet untuk masuk.",
       "generic": "Gagal masuk. Silakan coba lagi."
     }
