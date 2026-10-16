@@ -17,7 +17,7 @@ service cloud.firestore {
     function isMember() {
       return signedIn()
         && request.auth.token.email.matches('.*@alamsambung[.]app')
-        && memberKey() in ['tuesday', 'skye', 'llymochi'];
+        && memberKey() in ['tuesday', 'skye', 'llymochi', 'ela'];
     }
 
     function isAdmin() {
