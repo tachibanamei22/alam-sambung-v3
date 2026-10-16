@@ -31,6 +31,8 @@
     "payment": "Payment method",
     "method": { "cash": "Cash", "qris": "QRIS", "transfer": "Transfer" },
     "cashReceived": "Cash received",
+    "customAmount": "Other amount",
+    "short": "Short by",
     "exact": "Exact",
     "change": "Change",
     "proof": {

@@ -31,6 +31,8 @@
     "payment": "Metode pembayaran",
     "method": { "cash": "Tunai", "qris": "QRIS", "transfer": "Transfer" },
     "cashReceived": "Uang diterima",
+    "customAmount": "Nominal lain",
+    "short": "Kurang",
     "exact": "Pas",
     "change": "Kembalian",
     "proof": {
