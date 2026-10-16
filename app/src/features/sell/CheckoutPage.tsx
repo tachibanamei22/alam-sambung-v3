@@ -76,7 +76,7 @@ export function CheckoutPage() {
         </p>
       </div>
 
-      <div className="sticky bottom-[84px] px-4 pb-2 pt-3">
+      <div className="sticky bottom-[84px] lg:bottom-4 px-4 pb-2 pt-3">
         <button
           type="button"
           disabled={!c.canConfirm}

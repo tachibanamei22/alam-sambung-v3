@@ -126,10 +126,19 @@
   --radius-control: 16px;
 }
 
+html {
+  /* Keep room for the scrollbar so short and long pages have the same width. */
+  scrollbar-gutter: stable;
+}
+
 html,
 body,
 #root {
   height: 100%;
+}
+
+.scrollbar-stable {
+  scrollbar-gutter: stable;
 }
 
 body {

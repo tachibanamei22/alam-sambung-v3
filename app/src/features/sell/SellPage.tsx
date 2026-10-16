@@ -7,6 +7,7 @@ import { ProductCard } from '@/components/ProductCard'
 import { SyncPill } from '@/components/SyncPill'
 import { MEMBER_KEYS, MEMBER_NAMES } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
+import { useIntroPhase } from '@/lib/useIntroPhase'
 import { useProductName } from '@/lib/productName'
 import type { MemberKey } from '@/lib/types'
 import { cn } from '@/lib/utils'
@@ -22,6 +23,7 @@ export function SellPage() {
   const cart = useCart()
   const products = useProducts()
   const nameOf = useProductName()
+  const intro = useIntroPhase()
   const [query, setQuery] = useState('')
   const [member, setMember] = useState<MemberFilter>('all')
 
@@ -45,7 +47,7 @@ export function SellPage() {
 
   return (
     <div className="flex flex-1 lg:h-dvh">
-      <div className="flex min-w-0 flex-1 flex-col lg:overflow-y-auto">
+      <div className="scrollbar-stable flex min-w-0 flex-1 flex-col lg:overflow-y-auto">
         <AmberHeader
           // On a phone the sync state sits in the label above the title;
           // tablets have room for the full pill.
@@ -96,8 +98,8 @@ export function SellPage() {
           {visible.map((p, i) => (
             <div
               key={p.id}
-              className="animate-enter"
-              style={{ animationDelay: `${Math.min(i, 10) * 30}ms` }}
+              className={cn(intro && 'animate-enter')}
+              style={intro ? { animationDelay: `${Math.min(i, 10) * 30}ms` } : undefined}
             >
               <ProductCard
                 name={nameOf(p)}

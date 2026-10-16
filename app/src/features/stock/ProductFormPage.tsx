@@ -229,7 +229,7 @@ export function ProductFormPage() {
         )}
       </div>
 
-      <div className="sticky bottom-[84px] px-4 pb-2 pt-2">
+      <div className="sticky bottom-[84px] lg:bottom-4 px-4 pb-2 pt-2">
         <button
           type="button"
           onClick={save}
