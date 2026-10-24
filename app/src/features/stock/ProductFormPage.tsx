@@ -5,10 +5,12 @@ import { useTranslation } from 'react-i18next'
 import { Navigate, useNavigate, useParams } from 'react-router'
 import { toast } from 'sonner'
 import { AmberHeader } from '@/components/AmberHeader'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { Select } from '@/components/ui/select'
 import { CATEGORY_IDS } from '@/lib/categories'
 import { canEditProduct, useCurrentUser } from '@/lib/currentUser'
 import { compressImage } from '@/lib/image'
+import { MAX_PRICE, MAX_STOCK } from '@/lib/limits'
 import { MEMBER_KEYS, MEMBER_NAMES } from '@/lib/members'
 import type { CategoryId, MemberKey, Product } from '@/lib/types'
 import { cn } from '@/lib/utils'
@@ -56,6 +58,7 @@ export function ProductFormPage() {
     photoUrl: existing?.photoUrl,
   }))
   const [submitted, setSubmitted] = useState(false)
+  const [confirmingDelete, setConfirmingDelete] = useState(false)
 
   // Unknown product, or a member trying to open someone else's product.
   if (isEdit && (!existing || !canEditProduct(user, existing))) {
@@ -66,8 +69,8 @@ export function ProductFormPage() {
   const stock = Number(form.stock)
   const errors = {
     name: !form.nameId.trim() && !form.nameEn.trim(),
-    price: !Number.isFinite(price) || price <= 0,
-    stock: !Number.isInteger(stock) || stock < 0,
+    price: !Number.isFinite(price) || price <= 0 || price > MAX_PRICE,
+    stock: !Number.isInteger(stock) || stock < 0 || stock > MAX_STOCK,
   }
   const valid = !errors.name && !errors.price && !errors.stock
 
@@ -103,11 +106,9 @@ export function ProductFormPage() {
 
   function remove() {
     if (!existing) return
-    if (window.confirm(t('form.confirmDelete'))) {
-      removeProduct(existing.id)
-      toast(t('toast.productDeleted'))
-      void navigate('/staff/stock')
-    }
+    removeProduct(existing.id)
+    toast(t('toast.productDeleted'))
+    void navigate('/staff/stock')
   }
 
   return (
@@ -192,7 +193,7 @@ export function ProductFormPage() {
               inputMode="numeric"
               placeholder="45000"
               value={form.price}
-              onChange={(e) => set('price', e.target.value.replace(/\D/g, ''))}
+              onChange={(e) => set('price', e.target.value.replace(/\D/g, '').slice(0, 8))}
             />
           </Field>
           <Field label={t('form.stock')} grow>
@@ -201,7 +202,7 @@ export function ProductFormPage() {
               inputMode="numeric"
               placeholder="0"
               value={form.stock}
-              onChange={(e) => set('stock', e.target.value.replace(/\D/g, ''))}
+              onChange={(e) => set('stock', e.target.value.replace(/\D/g, '').slice(0, 5))}
             />
           </Field>
         </div>
@@ -220,7 +221,7 @@ export function ProductFormPage() {
         {isEdit && (
           <button
             type="button"
-            onClick={remove}
+            onClick={() => setConfirmingDelete(true)}
             className="mt-2 flex items-center justify-center gap-2 py-2 text-sm font-semibold text-danger"
           >
             <Trash2 className="size-4" />
@@ -233,11 +234,22 @@ export function ProductFormPage() {
         <button
           type="button"
           onClick={save}
-          className="h-[54px] w-full rounded-[20px] bg-accent text-[15px] font-bold text-on-accent"
+          className="h-14 w-full rounded-[20px] bg-accent text-base font-bold text-on-accent"
         >
           {t('form.save')}
         </button>
       </div>
+
+      <ConfirmDialog
+        open={confirmingDelete}
+        onOpenChange={setConfirmingDelete}
+        title={t('form.confirmDeleteTitle')}
+        description={t('form.confirmDelete', { name: existing ? (form.nameId || form.nameEn) : '' })}
+        confirmLabel={t('form.delete')}
+        icon={<Trash2 className="size-5" />}
+        destructive
+        onConfirm={remove}
+      />
     </>
   )
 }

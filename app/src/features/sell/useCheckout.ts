@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useCurrentUser } from '@/lib/currentUser'
 import { compressImage } from '@/lib/image'
 import { parseAmount, suggestCashAmounts } from '@/lib/money'
@@ -27,6 +27,8 @@ export function useCheckout() {
   const [customText, setCustomText] = useState('')
   const [proof, setProof] = useState<string | null>(null)
   const [proofError, setProofError] = useState(false)
+  // Two taps in the same instant must not record the same cart twice.
+  const confirming = useRef(false)
 
   const items = useMemo<CheckoutItem[]>(
     () =>
@@ -81,7 +83,11 @@ export function useCheckout() {
 
   /** Save the sale locally, reduce stock and empty the cart. */
   function confirm(): boolean {
-    if (!canConfirm) return false
+    if (!canConfirm || confirming.current) return false
+    confirming.current = true
+    window.setTimeout(() => {
+      confirming.current = false
+    }, 500)
     const saleItems: SaleItem[] = items.map(({ product, qty }) => ({
       productId: product.id,
       ownerId: product.owner,

@@ -9,7 +9,7 @@ import { MEMBER_KEYS } from './members'
  * Keep ADMIN_KEYS in sync with `isAdmin()` in firestore.rules.
  */
 export const EMAIL_DOMAIN = 'alamsambung.app'
-export const ADMIN_KEYS: MemberKey[] = ['tuesday']
+export const ADMIN_KEYS: MemberKey[] = ['ela']
 /** Firebase's own minimum for email/password accounts. */
 export const MIN_PASSWORD_LENGTH = 6
 const MAX_PASSWORD_LENGTH = 128

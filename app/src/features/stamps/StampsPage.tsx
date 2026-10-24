@@ -99,7 +99,7 @@ export function StampsPage() {
         <button
           type="button"
           onClick={() => setScanning(true)}
-          className="flex h-[54px] w-full items-center justify-center gap-2 rounded-[20px] bg-accent text-[15px] font-bold text-on-accent"
+          className="flex h-14 w-full items-center justify-center gap-2 rounded-[20px] bg-accent text-base font-bold text-on-accent"
         >
           <ScanLine className="size-[18px]" />
           {t('stamps.scan')}

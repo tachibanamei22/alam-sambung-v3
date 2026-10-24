@@ -4,6 +4,9 @@ import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 import { AmberHeader } from '@/components/AmberHeader'
 import { SyncPill } from '@/components/SyncPill'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
+import { ImageViewer } from '@/components/ui/image-viewer'
+import { Segmented } from '@/components/ui/segmented'
 import { useCurrentUser } from '@/lib/currentUser'
 import { MEMBER_NAMES } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
@@ -32,7 +35,11 @@ function ProofImage({ sale, alt }: { sale: Sale; alt: string }) {
   }, [sale])
 
   if (!src) return <div className="h-24 animate-pulse rounded-2xl bg-soft" />
-  return <img src={src} alt={alt} className="max-h-56 w-full rounded-2xl border border-border object-contain" />
+  return (
+    <ImageViewer src={src} title={alt} className="w-full">
+      <img src={src} alt={alt} className="max-h-56 w-full rounded-2xl border border-border object-contain" />
+    </ImageViewer>
+  )
 }
 
 type Filter = 'all' | 'cash' | 'qris' | 'transfer' | 'voided'
@@ -45,17 +52,18 @@ function matches(sale: Sale, filter: Filter) {
 }
 
 export function SalesPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const user = useCurrentUser()
   const sales = useSales()
   const [filter, setFilter] = useState<Filter>('all')
   const [openId, setOpenId] = useState<string | null>(null)
+  const [voiding, setVoiding] = useState<Sale | null>(null)
 
   const visible = sales.filter((s) => matches(s, filter))
   const now = useNow()
 
-  function confirmVoid(sale: Sale) {
-    if (window.confirm(t('sales.confirmVoid')) && voidSale(sale.id)) toast(t('toast.saleVoided'))
+  function doVoid(sale: Sale) {
+    if (voidSale(sale.id)) toast(t('toast.saleVoided'))
   }
 
   return (
@@ -69,23 +77,12 @@ export function SalesPage() {
         }
         title={t('sales.title')}
       >
-        <div className="flex flex-wrap gap-2" role="radiogroup" aria-label={t('sales.filter')}>
-          {FILTERS.map((f) => (
-            <button
-              key={f}
-              type="button"
-              role="radio"
-              aria-checked={filter === f}
-              onClick={() => setFilter(f)}
-              className={cn(
-                'rounded-full px-3.5 py-2 text-[13px] font-semibold',
-                filter === f ? 'bg-text text-bg' : 'bg-surface text-text',
-              )}
-            >
-              {t(`sales.filters.${f}`)}
-            </button>
-          ))}
-        </div>
+        <Segmented
+          aria-label={t('sales.filter')}
+          value={filter}
+          onValueChange={setFilter}
+          options={FILTERS.map((f) => ({ value: f, label: t(`sales.filters.${f}`) }))}
+        />
       </AmberHeader>
 
       <section className="flex flex-1 flex-col gap-3 px-5 pb-6 pt-5">
@@ -96,10 +93,10 @@ export function SalesPage() {
         )}
         {visible.map((sale) => {
           const date = new Date(sale.createdAt)
-          const time = date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+          const time = date.toLocaleTimeString(i18n.language, { hour: '2-digit', minute: '2-digit' })
           const day = isSameDay(sale.createdAt, now)
             ? ''
-            : `${date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })} `
+            : `${date.toLocaleDateString(i18n.language, { day: 'numeric', month: 'short' })} `
           const staff = MEMBER_NAMES[sale.staffId as MemberKey] ?? sale.staffId
           const open = openId === sale.id
           const canVoid = !sale.voided && (user.role === 'admin' || sale.staffId === user.memberKey)
@@ -188,7 +185,7 @@ export function SalesPage() {
                   {canVoid && (
                     <button
                       type="button"
-                      onClick={() => confirmVoid(sale)}
+                      onClick={() => setVoiding(sale)}
                       className="flex h-11 items-center justify-center gap-2 rounded-2xl border border-danger text-sm font-semibold text-danger"
                     >
                       <Ban className="size-4" />
@@ -201,6 +198,19 @@ export function SalesPage() {
           )
         })}
       </section>
+
+      <ConfirmDialog
+        open={voiding !== null}
+        onOpenChange={(next) => {
+          if (!next) setVoiding(null)
+        }}
+        title={t('sales.confirmVoidTitle')}
+        description={t('sales.confirmVoid')}
+        confirmLabel={t('sales.confirmVoidAction')}
+        icon={<Ban className="size-5" />}
+        destructive
+        onConfirm={() => voiding && doVoid(voiding)}
+      />
     </>
   )
 }

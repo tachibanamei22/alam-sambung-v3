@@ -1,6 +1,8 @@
 import { Camera, CircleCheck, Minus, Plus } from 'lucide-react'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ImageViewer } from '@/components/ui/image-viewer'
+import { Segmented } from '@/components/ui/segmented'
 import { formatRupiah } from '@/lib/money'
 import type { PaymentMethod } from '@/lib/types'
 import { cn } from '@/lib/utils'
@@ -37,23 +39,14 @@ export function QtyStepper({
 export function PaymentSwitch({ c }: { c: Checkout }) {
   const { t } = useTranslation()
   return (
-    <div className="flex gap-1 rounded-[20px] bg-soft p-1" role="radiogroup" aria-label={t('checkout.payment')}>
-      {METHODS.map((m) => (
-        <button
-          key={m}
-          type="button"
-          role="radio"
-          aria-checked={c.method === m}
-          onClick={() => c.setMethod(m)}
-          className={cn(
-            'h-10 flex-1 rounded-2xl text-[13px] font-semibold transition-colors',
-            c.method === m ? 'bg-surface text-text' : 'text-muted',
-          )}
-        >
-          {t(`checkout.method.${m}`)}
-        </button>
-      ))}
-    </div>
+    <Segmented
+      variant="tabs"
+      tone="soft"
+      aria-label={t('checkout.payment')}
+      value={c.method}
+      onValueChange={c.setMethod}
+      options={METHODS.map((m) => ({ value: m, label: t(`checkout.method.${m}`) }))}
+    />
   )
 }
 
@@ -152,7 +145,9 @@ export function ProofPanel({ c, bare }: { c: Checkout; bare?: boolean }) {
       />
       {c.proof ? (
         <div className="flex items-center gap-3">
-          <img src={c.proof} alt="" className="size-14 rounded-2xl object-cover" />
+          <ImageViewer src={c.proof} title={t('checkout.proof.title')} badge={false}>
+            <img src={c.proof} alt="" className="size-14 rounded-2xl object-cover" />
+          </ImageViewer>
           <span className="flex flex-1 items-center gap-1 text-[13px] font-semibold text-accent-text">
             <CircleCheck className="size-3.5" />
             {t('checkout.proof.attached')}

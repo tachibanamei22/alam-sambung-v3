@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { AmberHeader } from '@/components/AmberHeader'
+import { Segmented } from '@/components/ui/segmented'
 import { MEMBER_BAR, MEMBER_KEYS, MEMBER_NAMES, MEMBER_TINT, memberInitial } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
 import { cn } from '@/lib/utils'
@@ -44,21 +45,13 @@ export function SummaryPage() {
     <>
       <AmberHeader eyebrow={t('app.name')} title={t('summary.title')}>
         <div className="flex flex-col gap-3">
-          <div className="flex gap-1 rounded-[20px] bg-glass p-1">
-            {(['today', 'all'] as const).map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => setScope(s)}
-                className={cn(
-                  'h-9 flex-1 rounded-2xl text-[13px] font-semibold',
-                  scope === s ? 'bg-surface text-text' : 'text-text/70',
-                )}
-              >
-                {t(`summary.scope.${s}`)}
-              </button>
-            ))}
-          </div>
+          <Segmented
+            variant="tabs"
+            aria-label={t('summary.title')}
+            value={scope}
+            onValueChange={setScope}
+            options={(['today', 'all'] as const).map((s) => ({ value: s, label: t(`summary.scope.${s}`) }))}
+          />
           <div className="flex flex-col">
             <span className="text-[13px] text-text">{t('summary.totalSales')}</span>
             <span className="font-head text-[38px] font-extrabold leading-tight text-text">

@@ -21,12 +21,28 @@ service cloud.firestore {
     }
 
     function isAdmin() {
-      return isMember() && memberKey() in ['tuesday'];
+      return isMember() && memberKey() in ['ela'];
     }
 
     // Selling someone else's product only changes its stock count.
     function onlyStockChanged() {
       return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stock']);
+    }
+
+    // Size and type limits (mirrored in src/lib/limits.ts). Stock may dip below
+    // zero after two phones sell the last item offline, so the lower bound is loose.
+    function validStock(s) {
+      return s is int && s >= -9999 && s <= 99999;
+    }
+
+    function validProduct(d) {
+      return d.owner is string
+        && d.nameId is string && d.nameId.size() <= 120
+        && d.nameEn is string && d.nameEn.size() <= 120
+        && d.category in ['zine', 'sticker', 'accessory', 'print', 'merch', 'other']
+        && d.price is number && d.price > 0 && d.price <= 99999999
+        && validStock(d.stock)
+        && (!('photoUrl' in d) || (d.photoUrl is string && d.photoUrl.size() < 600000));
     }
 
     function keepsOwner() {
@@ -40,11 +56,12 @@ service cloud.firestore {
       allow get: if true;
       allow list: if isMember();
       allow create: if isMember()
-        && (isAdmin() || request.resource.data.owner == memberKey());
+        && (isAdmin() || request.resource.data.owner == memberKey())
+        && validProduct(request.resource.data);
       allow update: if isMember() && (
-        isAdmin()
-        || (resource.data.owner == memberKey() && keepsOwner())
-        || onlyStockChanged()
+        ((isAdmin() || (resource.data.owner == memberKey() && keepsOwner()))
+          && validProduct(request.resource.data))
+        || (onlyStockChanged() && validStock(request.resource.data.stock))
       );
       allow delete: if isMember() && (isAdmin() || resource.data.owner == memberKey());
     }
@@ -56,9 +73,18 @@ service cloud.firestore {
       allow create: if isMember()
         && request.resource.data.staffId == memberKey()
         && request.resource.data.items.size() > 0
-        && request.resource.data.total is number;
+        && request.resource.data.items.size() <= 100
+        && request.resource.data.total is number
+        && request.resource.data.total > 0
+        && request.resource.data.total <= 999999999
+        && request.resource.data.payment in ['cash', 'qris', 'transfer']
+        && request.resource.data.createdAt is number
+        && request.resource.data.get('voided', false) == false;
+      // A sale can be voided once; it can never be un-voided.
       allow update: if isMember()
         && (isAdmin() || resource.data.staffId == memberKey())
+        && resource.data.get('voided', false) == false
+        && request.resource.data.voided == true
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['voided', 'voidedAt']);
       allow delete: if false;
     }

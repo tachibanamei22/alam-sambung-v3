@@ -7,14 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#FFC24B" />
     <title>Alam Sambung</title>
-    <script>
-      // Apply the saved theme before first paint to avoid a light flash in dark mode.
-      try {
-        var saved = localStorage.getItem('as-theme')
-        var dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
-        if (dark) document.documentElement.classList.add('dark')
-      } catch (e) {}
-    </script>
+    <script src="/theme-init.js"></script>
   </head>
   <body>
     <div id="root"></div>

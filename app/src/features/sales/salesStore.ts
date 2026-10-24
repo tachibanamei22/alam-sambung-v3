@@ -19,10 +19,25 @@ import { returnStock } from '../products/productsStore'
 // list stays light. Without Firebase everything stays in localStorage.
 const KEY = 'as-sales'
 
+/** Minimum shape the screens rely on; guards against old or hand-edited data. */
+function isSale(value: unknown): value is Sale {
+  if (typeof value !== 'object' || value === null) return false
+  const s = value as Record<string, unknown>
+  return (
+    typeof s.id === 'string' &&
+    typeof s.staffId === 'string' &&
+    typeof s.total === 'number' &&
+    typeof s.createdAt === 'number' &&
+    typeof s.payment === 'string' &&
+    Array.isArray(s.items)
+  )
+}
+
 function loadLocal(): Sale[] {
   try {
     const raw = localStorage.getItem(KEY)
-    return raw ? (JSON.parse(raw) as Sale[]) : []
+    const parsed: unknown = raw ? JSON.parse(raw) : []
+    return Array.isArray(parsed) ? parsed.filter(isSale) : []
   } catch {
     return []
   }

@@ -4,10 +4,11 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { AmberHeader } from '@/components/AmberHeader'
 import { BottomSheet } from '@/components/ui/bottom-sheet'
+import { ImageViewer } from '@/components/ui/image-viewer'
+import { Segmented } from '@/components/ui/segmented'
 import { CATEGORY_ICONS } from '@/lib/categories'
-import { MEMBER_KEYS, MEMBER_NAMES, MEMBER_TINT } from '@/lib/members'
+import { MEMBER_NAMES, MEMBER_TINT, memberFilterOptions } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
-import { useIntroPhase } from '@/lib/useIntroPhase'
 import { useProductName } from '@/lib/productName'
 import type { MemberKey } from '@/lib/types'
 import { cn } from '@/lib/utils'
@@ -51,7 +52,13 @@ function ProductDetails({ item }: { item: CatalogItem }) {
 
   return (
     <>
-      <Thumb item={item} photo={photo} className="h-48 w-full rounded-[24px]" />
+      {photo ? (
+        <ImageViewer src={photo} title={nameOf(item)} className="w-full">
+          <Thumb item={item} photo={photo} className="h-48 w-full rounded-[24px]" />
+        </ImageViewer>
+      ) : (
+        <Thumb item={item} className="h-48 w-full rounded-[24px]" />
+      )}
       <div className="flex flex-col gap-1">
         <h3 className="font-head text-2xl font-bold">{nameOf(item)}</h3>
         <p className="text-sm text-muted">
@@ -80,7 +87,6 @@ export function CatalogPage() {
   const { items, loading } = useCatalog()
   const stamps = useStamps()
   const nameOf = useProductName()
-  const intro = useIntroPhase()
   const [query, setQuery] = useState('')
   const [member, setMember] = useState<MemberFilter>('all')
   // `selected` stays set while the sheet slides away, so it never empties mid-animation.
@@ -108,22 +114,12 @@ export function CatalogPage() {
             className="min-w-0 flex-1 bg-transparent text-sm text-text outline-none placeholder:text-muted"
           />
         </label>
-        <div className="flex flex-wrap gap-2">
-          {(['all', ...MEMBER_KEYS] as const).map((m) => (
-            <button
-              key={m}
-              type="button"
-              aria-pressed={member === m}
-              onClick={() => setMember(m)}
-              className={cn(
-                'rounded-full px-3.5 py-2 text-[13px] font-semibold',
-                member === m ? 'bg-text text-bg' : 'bg-surface text-text',
-              )}
-            >
-              {m === 'all' ? t('sales.filters.all') : MEMBER_NAMES[m]}
-            </button>
-          ))}
-        </div>
+        <Segmented
+          aria-label={t('nav.catalog')}
+          value={member}
+          onValueChange={setMember}
+          options={memberFilterOptions(t('sales.filters.all'))}
+        />
       </AmberHeader>
 
       <div className="flex flex-1 flex-col gap-4 px-5 pb-28 pt-5">
@@ -152,7 +148,7 @@ export function CatalogPage() {
             {t('catalog.empty')}
           </p>
         ) : (
-          <section className="grid grid-cols-2 gap-3">
+          <section key={member} className="grid grid-cols-2 gap-3">
             {visible.map((p, i) => (
               <button
                 key={p.id}
@@ -161,10 +157,10 @@ export function CatalogPage() {
                   setSelected(p)
                   setSheetOpen(true)
                 }}
-                style={intro ? { animationDelay: `${Math.min(i, 10) * 30}ms` } : undefined}
+                style={{ animationDelay: `${Math.min(i, 10) * 30}ms` }}
                 className={cn(
                   'flex flex-col gap-2.5 rounded-card border border-border bg-surface p-2.5 text-left',
-                  intro && 'animate-enter',
+                  'animate-enter',
                   p.status === 'soldOut' && 'opacity-50',
                 )}
               >

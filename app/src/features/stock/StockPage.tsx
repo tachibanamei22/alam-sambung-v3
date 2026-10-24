@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { AmberHeader } from '@/components/AmberHeader'
+import { Segmented } from '@/components/ui/segmented'
 import { CATEGORY_ICONS } from '@/lib/categories'
 import { canEditProduct, useCurrentUser } from '@/lib/currentUser'
 import { MEMBER_NAMES, MEMBER_TINT } from '@/lib/members'
@@ -35,22 +36,14 @@ export function StockPage() {
   return (
     <>
       <AmberHeader eyebrow={roleLabel} title={t('stock.title')}>
-        <div className="flex gap-1 rounded-[20px] bg-glass p-1">
-          {(['mine', 'all'] as const).map((s) => (
-            <button
-              key={s}
-              type="button"
-              disabled={user.role === 'admin'}
-              onClick={() => setScope(s)}
-              className={cn(
-                'h-10 flex-1 rounded-2xl text-[13px] font-semibold',
-                effectiveScope === s ? 'bg-surface text-text' : 'text-text/70',
-              )}
-            >
-              {t(`stock.scope.${s}`)}
-            </button>
-          ))}
-        </div>
+        <Segmented
+          variant="tabs"
+          aria-label={t('stock.title')}
+          value={effectiveScope}
+          onValueChange={setScope}
+          disabled={user.role === 'admin'}
+          options={(['mine', 'all'] as const).map((s) => ({ value: s, label: t(`stock.scope.${s}`) }))}
+        />
       </AmberHeader>
 
       <div className="flex flex-1 flex-col gap-3.5 px-5 pb-28 pt-5">
@@ -164,7 +157,7 @@ export function StockPage() {
         <button
           type="button"
           onClick={() => void navigate('/staff/stock/new')}
-          className="flex h-[54px] w-full items-center justify-center gap-2 rounded-[20px] bg-accent text-[15px] font-bold text-on-accent"
+          className="flex h-14 w-full items-center justify-center gap-2 rounded-[20px] bg-accent text-base font-bold text-on-accent"
         >
           <Plus className="size-[18px]" />
           {t('stock.addProduct')}
