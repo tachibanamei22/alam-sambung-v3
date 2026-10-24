@@ -5,16 +5,14 @@ import { useNavigate } from 'react-router'
 import { AmberHeader } from '@/components/AmberHeader'
 import { ProductCard } from '@/components/ProductCard'
 import { SyncPill } from '@/components/SyncPill'
-import { Segmented } from '@/components/ui/segmented'
-import { MEMBER_NAMES, memberFilterOptions } from '@/lib/members'
+import { MemberFilter } from '@/components/MemberFilter'
+import type { MemberFilterValue } from '@/components/MemberFilter'
+import { MEMBER_NAMES } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
 import { useProductName } from '@/lib/productName'
-import type { MemberKey } from '@/lib/types'
 import { useProducts } from '../products/productsStore'
 import { CartPanel } from './CartPanel'
 import { useCart } from './cart-context'
-
-type MemberFilter = 'all' | MemberKey
 
 export function SellPage() {
   const { t } = useTranslation()
@@ -23,7 +21,7 @@ export function SellPage() {
   const products = useProducts()
   const nameOf = useProductName()
   const [query, setQuery] = useState('')
-  const [member, setMember] = useState<MemberFilter>('all')
+  const [member, setMember] = useState<MemberFilterValue>('all')
 
   const total = useMemo(
     () =>
@@ -68,11 +66,11 @@ export function SellPage() {
                 className="min-w-0 flex-1 bg-transparent text-sm text-text outline-none placeholder:text-muted"
               />
             </label>
-            <Segmented
+            <MemberFilter
               aria-label={t('stock.title')}
               value={member}
               onValueChange={setMember}
-              options={memberFilterOptions(t('sales.filters.all'))}
+              allLabel={t('sales.filters.all')}
             />
           </div>
         </AmberHeader>

@@ -3,21 +3,19 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { AmberHeader } from '@/components/AmberHeader'
+import { MemberFilter } from '@/components/MemberFilter'
+import type { MemberFilterValue } from '@/components/MemberFilter'
 import { BottomSheet } from '@/components/ui/bottom-sheet'
 import { ImageViewer } from '@/components/ui/image-viewer'
-import { Segmented } from '@/components/ui/segmented'
 import { CATEGORY_ICONS } from '@/lib/categories'
-import { MEMBER_NAMES, MEMBER_TINT, memberFilterOptions } from '@/lib/members'
+import { MEMBER_NAMES, MEMBER_TINT } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
 import { useProductName } from '@/lib/productName'
-import type { MemberKey } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { STAMP_BOOTHS } from '../stamps/booths'
 import { useStamps } from '../stamps/stampsStore'
 import type { CatalogItem } from './catalogDoc'
 import { loadProductPhoto, useCatalog } from './catalogStore'
-
-type MemberFilter = 'all' | MemberKey
 
 function Thumb({ item, photo, className }: { item: CatalogItem; photo?: string | null; className?: string }) {
   const Icon = CATEGORY_ICONS[item.category]
@@ -88,7 +86,7 @@ export function CatalogPage() {
   const stamps = useStamps()
   const nameOf = useProductName()
   const [query, setQuery] = useState('')
-  const [member, setMember] = useState<MemberFilter>('all')
+  const [member, setMember] = useState<MemberFilterValue>('all')
   // `selected` stays set while the sheet slides away, so it never empties mid-animation.
   const [selected, setSelected] = useState<CatalogItem | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -114,11 +112,11 @@ export function CatalogPage() {
             className="min-w-0 flex-1 bg-transparent text-sm text-text outline-none placeholder:text-muted"
           />
         </label>
-        <Segmented
+        <MemberFilter
           aria-label={t('nav.catalog')}
           value={member}
           onValueChange={setMember}
-          options={memberFilterOptions(t('sales.filters.all'))}
+          allLabel={t('sales.filters.all')}
         />
       </AmberHeader>
 

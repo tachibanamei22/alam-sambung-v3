@@ -3,8 +3,9 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { AmberHeader } from '@/components/AmberHeader'
+import { MemberMark } from '@/components/MemberMark'
 import { Segmented } from '@/components/ui/segmented'
-import { MEMBER_BAR, MEMBER_KEYS, MEMBER_NAMES, MEMBER_TINT, memberInitial } from '@/lib/members'
+import { MEMBER_BAR, MEMBER_KEYS, MEMBER_NAMES } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
 import { cn } from '@/lib/utils'
 import { useNow } from '@/lib/useNow'
@@ -93,14 +94,7 @@ export function SummaryPage() {
           <h2 className="text-[15px] font-bold">{t('summary.byMember')}</h2>
           {MEMBER_KEYS.map((key) => (
             <div key={key} className="flex items-center gap-2.5">
-              <span
-                className={cn(
-                  'flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold',
-                  MEMBER_TINT[key],
-                )}
-              >
-                {memberInitial(key)}
-              </span>
+              <MemberMark member={key} className="size-8 text-sm" />
               <div className="flex flex-1 flex-col gap-1.5">
                 <div className="flex justify-between text-[13px]">
                   <span className="font-semibold">{MEMBER_NAMES[key]}</span>

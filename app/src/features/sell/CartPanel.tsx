@@ -1,8 +1,9 @@
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
+import { MemberMark } from '@/components/MemberMark'
 import { CATEGORY_ICONS } from '@/lib/categories'
 import { useCurrentUser } from '@/lib/currentUser'
-import { MEMBER_NAMES, MEMBER_TINT, memberInitial } from '@/lib/members'
+import { MEMBER_NAMES, MEMBER_TINT } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
 import { cn } from '@/lib/utils'
 import { CashPanel, PaymentSwitch, ProofPanel, QtyStepper } from './CheckoutParts'
@@ -35,14 +36,7 @@ export function CartPanel() {
       </div>
 
       <div className="flex items-center gap-2.5 rounded-3xl bg-bg py-2 pl-2 pr-3">
-        <span
-          className={cn(
-            'flex size-7 items-center justify-center rounded-full text-xs font-bold',
-            MEMBER_TINT[user.memberKey],
-          )}
-        >
-          {memberInitial(user.memberKey)}
-        </span>
+        <MemberMark member={user.memberKey} className="size-7 text-sm" />
         <span className="text-[13px] font-semibold">
           {t('sell.cart.sellingAs', { name: MEMBER_NAMES[user.memberKey] })}
         </span>

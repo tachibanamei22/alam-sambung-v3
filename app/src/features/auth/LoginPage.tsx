@@ -3,9 +3,10 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AmberHeader } from '@/components/AmberHeader'
+import { MemberMark } from '@/components/MemberMark'
 import { demoMode, signIn } from '@/lib/currentUser'
 import { isValidPassword } from '@/lib/identity'
-import { MEMBER_KEYS, MEMBER_NAMES, MEMBER_TINT, memberInitial } from '@/lib/members'
+import { MEMBER_KEYS, MEMBER_NAMES } from '@/lib/members'
 import type { MemberKey } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
@@ -63,14 +64,7 @@ export function LoginPage() {
                   member === key ? 'border-2 border-text' : 'border-border',
                 )}
               >
-                <span
-                  className={cn(
-                    'flex size-10 items-center justify-center rounded-full font-head text-base font-bold',
-                    MEMBER_TINT[key],
-                  )}
-                >
-                  {memberInitial(key)}
-                </span>
+                <MemberMark member={key} className="size-11 text-xl" />
                 <span className="text-[15px] font-semibold">{MEMBER_NAMES[key]}</span>
               </button>
             ))}

@@ -1,6 +1,11 @@
 @import 'tailwindcss';
 @import '@fontsource-variable/outfit';
 @import '@fontsource-variable/dm-sans';
+/* Member initials: one display font each (latin only, regular weight). */
+@import '@fontsource/abril-fatface/latin-400.css';
+@import '@fontsource/pacifico/latin-400.css';
+@import '@fontsource/chewy/latin-400.css';
+@import '@fontsource/bungee/latin-400.css';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -108,6 +113,10 @@
 
   --font-head: 'Outfit Variable', ui-sans-serif, system-ui, sans-serif;
   --font-body: 'DM Sans Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-m-1: 'Abril Fatface', ui-serif, Georgia, serif;
+  --font-m-2: 'Pacifico', cursive;
+  --font-m-3: 'Chewy', 'Comic Sans MS', cursive;
+  --font-m-4: 'Bungee', Impact, sans-serif;
 
   /* Between lg (1024) and xl (1280): lets a 1180px tablet show 4 product columns. */
   --breakpoint-wide: 68.75rem;

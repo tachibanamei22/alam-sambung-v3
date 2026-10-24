@@ -1,5 +1,7 @@
 import type { LucideIcon } from 'lucide-react'
+import { useRef } from 'react'
 import { NavLink } from 'react-router'
+import { useSlidingHighlight } from '@/lib/useSlidingHighlight'
 import { cn } from '@/lib/utils'
 import { useActiveIndex } from './useActiveIndex'
 
@@ -13,6 +15,18 @@ export interface TabItem {
 
 export function TabBar({ items, className }: { items: TabItem[]; className?: string }) {
   const active = useActiveIndex(items)
+  const list = useRef<HTMLUListElement>(null)
+  const cells = useRef<(HTMLLIElement | null)[]>([])
+
+  const highlight = useSlidingHighlight({
+    active: active >= 0 ? active : null,
+    container: list,
+    measure: (key) => {
+      const el = cells.current[Number(key)]
+      return el ? { x: el.offsetLeft, y: el.offsetTop, w: el.offsetWidth, h: el.offsetHeight } : null
+    },
+  })
+
   return (
     <nav
       className={cn(
@@ -20,29 +34,32 @@ export function TabBar({ items, className }: { items: TabItem[]; className?: str
         className,
       )}
     >
-      <ul className="relative flex h-[60px] items-stretch gap-1 rounded-full border border-border bg-surface p-1.5 shadow-lg shadow-black/10">
-        {active >= 0 && (
-          // Slides between tabs. Tabs are equal width, so its offset is a
-          // multiple of its own width plus the 4px gap.
-          <span
-            aria-hidden
-            className="pointer-events-none absolute bottom-1.5 left-1.5 top-1.5 rounded-full bg-text transition-transform duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)]"
-            style={{
-              width: `calc((100% - 12px - ${(items.length - 1) * 4}px) / ${items.length})`,
-              transform: `translateX(calc(${active} * (100% + 4px)))`,
-            }}
-          />
-        )}
+      <ul
+        ref={list}
+        className="relative flex h-[60px] items-stretch gap-1 rounded-full border border-border bg-surface p-1.5 shadow-lg shadow-black/10"
+      >
+        <span
+          ref={highlight}
+          aria-hidden
+          style={{ opacity: 0 }}
+          className="pointer-events-none absolute left-0 top-0 rounded-full bg-text"
+        />
         {items.map(({ to, label, Icon }, i) => (
-          <li key={to} className="flex-1">
+          <li
+            key={to}
+            ref={(el) => {
+              cells.current[i] = el
+            }}
+            className="flex-1"
+          >
             <NavLink
               to={to}
               className={cn(
-                'relative flex h-full flex-col items-center justify-center gap-0.5 rounded-full text-[11px] font-semibold transition-colors duration-200',
+                'relative flex h-full flex-col items-center justify-center gap-0.5 rounded-full text-[11px] font-semibold transition-colors duration-300',
                 i === active ? 'text-bg' : 'text-muted',
               )}
             >
-              <Icon className="size-5" />
+              <Icon className={cn('size-5 transition-transform duration-300', i === active && 'scale-110')} />
               {label}
             </NavLink>
           </li>
