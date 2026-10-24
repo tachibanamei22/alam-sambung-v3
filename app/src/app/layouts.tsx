@@ -1,6 +1,7 @@
 import { ChartColumn, LayoutGrid, Package, Receipt, ShoppingCart, Stamp } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Outlet, useLocation } from 'react-router'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { NavRail } from '@/components/NavRail'
 import { TabBar } from '@/components/TabBar'
 import type { TabItem } from '@/components/TabBar'
@@ -47,7 +48,9 @@ function Shell({ tabs, tablet, narrow }: ShellProps) {
               'lg:[&>*:not(header)]:mx-auto lg:[&>*:not(header)]:w-full lg:[&>*:not(header)]:max-w-[720px]',
           )}
         >
-          <Outlet />
+          <ErrorBoundary>
+            <Outlet />
+          </ErrorBoundary>
         </main>
         <TabBar items={tabs} className={tablet ? 'lg:hidden' : undefined} />
       </div>

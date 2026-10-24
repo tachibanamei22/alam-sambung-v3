@@ -95,8 +95,8 @@
     "confirmDelete": "{{name}} will be removed for good. This cannot be undone.",
     "errors": {
       "name": "Enter a name in at least one language.",
-      "price": "Enter a price above 0.",
-      "stock": "Stock must be a whole number, 0 or more."
+      "price": "Enter a price from 1 to 99,999,999.",
+      "stock": "Stock must be a whole number from 0 to 99,999."
     }
   },
   "categories": {
@@ -189,6 +189,11 @@
     "productSaved": "Product saved",
     "productDeleted": "Product deleted",
     "viewSales": "View"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "body": "This screen hit a problem. Your sales are safe. Reload to try again.",
+    "reload": "Reload"
   },
   "account": {
     "menu": "Account menu",

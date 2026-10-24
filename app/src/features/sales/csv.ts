@@ -2,8 +2,14 @@ import { MEMBER_KEYS, MEMBER_NAMES } from '@/lib/members'
 import type { Sale } from '@/lib/types'
 import { summarize } from './stats'
 
+/**
+ * Spreadsheets run cells that start with = + - @ as formulas. A product named
+ * =HYPERLINK(...) would execute when the export is opened, so text cells that
+ * look like formulas get a leading apostrophe.
+ */
 function cell(value: string | number | boolean): string {
-  const text = String(value)
+  let text = String(value)
+  if (typeof value === 'string' && /^[=+\-@\t\r]/.test(text)) text = `'${text}`
   return /[",\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text
 }
 

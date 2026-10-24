@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { STAMP_BOOTHS, parseStampToken, stampLink } from './booths'
+import { STAMP_BOOTHS, decodeToken, parseStampToken, stampLink } from './booths'
 import { applyStamp } from './stampsStore'
 
 describe('applyStamp', () => {
@@ -63,5 +63,15 @@ describe('parseStampToken', () => {
 
   it('accepts a bare typed code', () => {
     expect(parseStampToken('  as-kopi-tinta ')).toBe('as-kopi-tinta')
+  })
+})
+
+describe('decodeToken', () => {
+  it('decodes a normal segment', () => {
+    expect(decodeToken('as%2Dneko-press')).toBe('as-neko-press')
+  })
+
+  it('does not throw on a stray percent sign', () => {
+    expect(decodeToken('%E0%A4%A')).toBe('%E0%A4%A')
   })
 })

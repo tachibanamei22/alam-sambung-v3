@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router'
 import { AmberHeader } from '@/components/AmberHeader'
-import { STAMP_BOOTHS } from './booths'
+import { STAMP_BOOTHS, decodeToken } from './booths'
 import { claimStamp } from './stampsStore'
 import type { ClaimResult } from './stampsStore'
 
@@ -18,10 +18,10 @@ export function StampClaimPage() {
     // Strict Mode runs effects twice in development; claim only once.
     if (claimed.current) return
     claimed.current = true
-    setResult(claimStamp(decodeURIComponent(token)))
+    setResult(claimStamp(decodeToken(token)))
   }, [token])
 
-  const booth = STAMP_BOOTHS.find((b) => b.token.toLowerCase() === decodeURIComponent(token).toLowerCase())
+  const booth = STAMP_BOOTHS.find((b) => b.token.toLowerCase() === decodeToken(token).toLowerCase())
 
   const view = {
     ok: { Icon: CircleCheck, tone: 'text-accent-text', title: t('stamps.claim.ok', { booth: booth?.name }) },

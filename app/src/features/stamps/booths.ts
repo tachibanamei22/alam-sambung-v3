@@ -17,6 +17,15 @@ export function stampLink(origin: string, token: string): string {
   return `${origin}/visit/stamp/${token}`
 }
 
+/** Decode a path segment; a stray % in a hand-typed link must not crash the page. */
+export function decodeToken(raw: string): string {
+  try {
+    return decodeURIComponent(raw)
+  } catch {
+    return raw
+  }
+}
+
 /** Pull a booth token out of a scanned QR value or a typed code. */
 export function parseStampToken(raw: string): string {
   const value = raw.trim()

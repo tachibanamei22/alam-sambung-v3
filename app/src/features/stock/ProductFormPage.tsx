@@ -10,6 +10,7 @@ import { Select } from '@/components/ui/select'
 import { CATEGORY_IDS } from '@/lib/categories'
 import { canEditProduct, useCurrentUser } from '@/lib/currentUser'
 import { compressImage } from '@/lib/image'
+import { MAX_PRICE, MAX_STOCK } from '@/lib/limits'
 import { MEMBER_KEYS, MEMBER_NAMES } from '@/lib/members'
 import type { CategoryId, MemberKey, Product } from '@/lib/types'
 import { cn } from '@/lib/utils'
@@ -68,8 +69,8 @@ export function ProductFormPage() {
   const stock = Number(form.stock)
   const errors = {
     name: !form.nameId.trim() && !form.nameEn.trim(),
-    price: !Number.isFinite(price) || price <= 0,
-    stock: !Number.isInteger(stock) || stock < 0,
+    price: !Number.isFinite(price) || price <= 0 || price > MAX_PRICE,
+    stock: !Number.isInteger(stock) || stock < 0 || stock > MAX_STOCK,
   }
   const valid = !errors.name && !errors.price && !errors.stock
 
@@ -192,7 +193,7 @@ export function ProductFormPage() {
               inputMode="numeric"
               placeholder="45000"
               value={form.price}
-              onChange={(e) => set('price', e.target.value.replace(/\D/g, ''))}
+              onChange={(e) => set('price', e.target.value.replace(/\D/g, '').slice(0, 8))}
             />
           </Field>
           <Field label={t('form.stock')} grow>
@@ -201,7 +202,7 @@ export function ProductFormPage() {
               inputMode="numeric"
               placeholder="0"
               value={form.stock}
-              onChange={(e) => set('stock', e.target.value.replace(/\D/g, ''))}
+              onChange={(e) => set('stock', e.target.value.replace(/\D/g, '').slice(0, 5))}
             />
           </Field>
         </div>

@@ -29,7 +29,14 @@ const KEY = 'as-stamps'
 function load(): Stamp[] {
   try {
     const raw = localStorage.getItem(KEY)
-    return raw ? (JSON.parse(raw) as Stamp[]) : []
+    const parsed: unknown = raw ? JSON.parse(raw) : []
+    // Anything that is not a list of {token, at} (old or edited data) is ignored.
+    return Array.isArray(parsed)
+      ? parsed.filter(
+          (s): s is Stamp =>
+            typeof s === 'object' && s !== null && typeof s.token === 'string' && typeof s.at === 'number',
+        )
+      : []
   } catch {
     return []
   }

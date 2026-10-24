@@ -95,8 +95,8 @@
     "confirmDelete": "{{name}} akan dihapus permanen. Tindakan ini tidak bisa dibatalkan.",
     "errors": {
       "name": "Isi nama minimal dalam satu bahasa.",
-      "price": "Isi harga di atas 0.",
-      "stock": "Stok harus bilangan bulat, 0 atau lebih."
+      "price": "Isi harga dari 1 sampai 99.999.999.",
+      "stock": "Stok harus bilangan bulat, 0 sampai 99.999."
     }
   },
   "categories": {
@@ -189,6 +189,11 @@
     "productSaved": "Produk tersimpan",
     "productDeleted": "Produk dihapus",
     "viewSales": "Lihat"
+  },
+  "error": {
+    "title": "Ada masalah",
+    "body": "Layar ini mengalami kendala. Data penjualanmu aman. Muat ulang untuk mencoba lagi.",
+    "reload": "Muat ulang"
   },
   "account": {
     "menu": "Menu akun",
