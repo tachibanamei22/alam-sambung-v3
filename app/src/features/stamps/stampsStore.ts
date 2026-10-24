@@ -16,9 +16,11 @@ export function applyStamp(
   booths: StampBooth[],
   now: number,
 ): { stamps: Stamp[]; result: ClaimResult } {
-  if (!booths.some((b) => b.token === token)) return { stamps, result: 'unknown' }
-  if (stamps.some((s) => s.token === token)) return { stamps, result: 'duplicate' }
-  return { stamps: [...stamps, { token, at: now }], result: 'ok' }
+  // Typed codes may come in any case; the booth's own spelling is what is stored.
+  const booth = booths.find((b) => b.token.toLowerCase() === token.trim().toLowerCase())
+  if (!booth) return { stamps, result: 'unknown' }
+  if (stamps.some((s) => s.token === booth.token)) return { stamps, result: 'duplicate' }
+  return { stamps: [...stamps, { token: booth.token, at: now }], result: 'ok' }
 }
 
 // The stamp card lives on the visitor's own phone, so no account is needed.

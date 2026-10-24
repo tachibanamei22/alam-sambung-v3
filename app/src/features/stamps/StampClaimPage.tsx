@@ -21,7 +21,7 @@ export function StampClaimPage() {
     setResult(claimStamp(decodeURIComponent(token)))
   }, [token])
 
-  const booth = STAMP_BOOTHS.find((b) => b.token === decodeURIComponent(token))
+  const booth = STAMP_BOOTHS.find((b) => b.token.toLowerCase() === decodeURIComponent(token).toLowerCase())
 
   const view = {
     ok: { Icon: CircleCheck, tone: 'text-accent-text', title: t('stamps.claim.ok', { booth: booth?.name }) },

@@ -76,7 +76,7 @@ export function VisitorLayout() {
   const { t } = useTranslation()
   const tabs: TabItem[] = [
     { to: '/visit', label: t('nav.catalog'), Icon: LayoutGrid },
-    { to: '/visit/stamps', label: t('nav.stamps'), Icon: Stamp },
+    { to: '/visit/stamps', label: t('nav.stamps'), Icon: Stamp, also: ['/visit/stamp'] },
   ]
   return <Shell tabs={tabs} />
 }

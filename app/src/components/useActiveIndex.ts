@@ -10,10 +10,12 @@ export function useActiveIndex(items: TabItem[]): number {
   const { pathname } = useLocation()
   let best = -1
   let bestLen = -1
-  items.forEach(({ to }, i) => {
-    if ((pathname === to || pathname.startsWith(`${to}/`)) && to.length > bestLen) {
-      best = i
-      bestLen = to.length
+  items.forEach(({ to, also = [] }, i) => {
+    for (const prefix of [to, ...also]) {
+      if ((pathname === prefix || pathname.startsWith(`${prefix}/`)) && prefix.length > bestLen) {
+        best = i
+        bestLen = prefix.length
+      }
     }
   })
   return best

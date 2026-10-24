@@ -7,6 +7,8 @@ export interface TabItem {
   to: string
   label: string
   Icon: LucideIcon
+  /** Other path prefixes that belong to this tab (e.g. a QR claim page). */
+  also?: string[]
 }
 
 export function TabBar({ items, className }: { items: TabItem[]; className?: string }) {
