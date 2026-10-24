@@ -1,4 +1,5 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useRef } from 'react'
+import { useSlidingHighlight } from '@/lib/useSlidingHighlight'
 import { cn } from '@/lib/utils'
 
 export interface SegmentedOption<T extends string> {
@@ -24,8 +25,9 @@ interface SegmentedProps<T extends string> {
 
 /**
  * The one control behind every filter, scope and payment switch. A highlight
- * slides to the chosen option instead of the colour just snapping over.
- * Painting order: option backgrounds, then the highlight, then the labels.
+ * flows to the chosen option (see useSlidingHighlight) instead of the colour
+ * just snapping over. Painting order: option backgrounds, then the highlight,
+ * then the labels.
  */
 export function Segmented<T extends string>({
   value,
@@ -38,36 +40,17 @@ export function Segmented<T extends string>({
   ...aria
 }: SegmentedProps<T>) {
   const root = useRef<HTMLDivElement>(null)
-  const highlight = useRef<HTMLSpanElement>(null)
   const refs = useRef(new Map<string, HTMLButtonElement>())
-  const placed = useRef(false)
   const chips = variant === 'chips'
 
-  // The highlight is positioned straight on the DOM node: it mirrors layout
-  // that React does not own, and this avoids a render per measurement.
-  useLayoutEffect(() => {
-    const place = () => {
-      const el = refs.current.get(value)
-      const mark = highlight.current
-      if (!el || !mark) return
-      mark.style.width = `${el.offsetWidth}px`
-      mark.style.height = `${el.offsetHeight}px`
-      mark.style.transform = `translate(${el.offsetLeft}px, ${el.offsetTop}px)`
-      mark.style.opacity = '1'
-      // Skip the slide for the first placement so it does not fly in.
-      if (!placed.current) {
-        placed.current = true
-        requestAnimationFrame(() => {
-          mark.style.transition = ''
-        })
-      }
-    }
-    place()
-    // Labels change width with the language, and chips re-wrap with the window.
-    const observer = new ResizeObserver(place)
-    if (root.current) observer.observe(root.current)
-    return () => observer.disconnect()
-  }, [value, options])
+  const highlight = useSlidingHighlight({
+    active: value,
+    container: root,
+    measure: (key) => {
+      const el = refs.current.get(String(key))
+      return el ? { x: el.offsetLeft, y: el.offsetTop, w: el.offsetWidth, h: el.offsetHeight } : null
+    },
+  })
 
   return (
     <div
@@ -85,9 +68,9 @@ export function Segmented<T extends string>({
       <span
         ref={highlight}
         aria-hidden
-        style={{ opacity: 0, transition: 'none' }}
+        style={{ opacity: 0 }}
         className={cn(
-          'pointer-events-none absolute left-0 top-0 transition-[transform,width,height] duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)]',
+          'pointer-events-none absolute left-0 top-0',
           chips ? 'rounded-full bg-text' : 'rounded-2xl bg-surface shadow-sm shadow-black/5',
         )}
       />
@@ -113,8 +96,9 @@ export function Segmented<T extends string>({
           >
             <span
               className={cn(
-                'relative transition-colors duration-200',
+                'relative inline-block transition-[color,transform] duration-300',
                 active ? (chips ? 'text-bg' : 'text-text') : chips ? 'text-text' : 'text-muted',
+                active && 'scale-[1.04]',
               )}
             >
               {option.label}
