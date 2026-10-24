@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { demoMode, signIn, signOutUser, useCurrentUser } from '@/lib/currentUser'
 import { setLang } from '@/lib/i18n'
 import type { Lang } from '@/lib/i18n'
-import { MEMBER_KEYS, MEMBER_NAMES, MEMBER_TINT, memberInitial } from '@/lib/members'
+import { MEMBER_KEYS, MEMBER_NAMES } from '@/lib/members'
 import { useTheme } from '@/lib/theme-context'
 import type { Theme } from '@/lib/theme-context'
 import type { MemberKey } from '@/lib/types'
-import { cn } from '@/lib/utils'
+import { MemberMark } from './MemberMark'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,21 +32,14 @@ export function AccountMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger
         aria-label={t('account.menu')}
-        className="flex size-10 shrink-0 items-center justify-center rounded-full bg-text font-head text-sm font-bold text-bg outline-none focus-visible:ring-2 focus-visible:ring-text/40 data-[state=open]:ring-2 data-[state=open]:ring-text/40"
+        className="flex size-10 shrink-0 items-center justify-center rounded-full outline-none ring-2 ring-text/15 focus-visible:ring-text/50 data-[state=open]:ring-text/50"
       >
-        {memberInitial(user.memberKey)}
+        <MemberMark member={user.memberKey} className="size-10 text-lg" />
       </DropdownMenuTrigger>
 
       <DropdownMenuContent>
         <div className="flex items-center gap-3 px-3 py-2.5">
-          <span
-            className={cn(
-              'flex size-10 items-center justify-center rounded-full font-head text-base font-bold',
-              MEMBER_TINT[user.memberKey],
-            )}
-          >
-            {memberInitial(user.memberKey)}
-          </span>
+          <MemberMark member={user.memberKey} className="size-10 text-lg" />
           <span className="flex min-w-0 flex-col">
             <span className="truncate text-sm font-semibold">{MEMBER_NAMES[user.memberKey]}</span>
             <span className="text-xs text-muted">

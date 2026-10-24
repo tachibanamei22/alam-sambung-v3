@@ -47,10 +47,22 @@ export const MEMBER_TINT = bySlot(TINT_SLOTS)
 /** Solid bar colour per member, for the summary chart. */
 export const MEMBER_BAR = bySlot(BAR_SLOTS)
 
-/** "All" plus one option per member, for the filter chips on Sell and Catalog. */
-export function memberFilterOptions(allLabel: string): { value: 'all' | MemberKey; label: string }[] {
-  return [
-    { value: 'all', label: allLabel },
-    ...MEMBER_KEYS.map((key) => ({ value: key, label: MEMBER_NAMES[key] })),
-  ]
-}
+// Each member's initial is set in its own display font, in the same order as
+// the colour slots (a 5th member reuses slot 1). The fonts are bundled in
+// styles/index.css; the class names are written out so Tailwind can see them.
+const FONT_SLOTS = [
+  'font-m-1 text-[1.05em]', // Abril Fatface: high-contrast serif
+  'font-m-2 text-[1.2em]', // Pacifico: brush script
+  'font-m-3 text-[1.1em]', // Chewy: soft and playful
+  'font-m-4 text-[0.95em]', // Bungee: heavy block capitals
+]
+
+/** The display-font class for a member's initial. */
+export const MEMBER_FONT = bySlot(FONT_SLOTS)
+
+/**
+ * Optional logo per member. Put a square PNG or SVG in app/public/members/
+ * (for example '/members/ela.png') and list it here; until then the avatar
+ * shows the styled initial.
+ */
+export const MEMBER_LOGO: Partial<Record<MemberKey, string>> = {}
