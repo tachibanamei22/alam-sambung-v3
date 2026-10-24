@@ -45,23 +45,14 @@ on the device. Add the Firebase values below to switch to the shared backend.
    VITE_FIREBASE_MESSAGING_SENDER_ID=...
    VITE_FIREBASE_APP_ID=...
    ```
-3. **Authentication** > Get started > Sign-in method > enable **Email/Password**
-   (not "Email link"). Then Users > Add user, one per member. Any password of
-   at least 6 characters works (a 6-digit PIN is fine too):
-
-   | Email | Password |
-   |---|---|
-   | `tuesday@alamsambung.app` (admin) | Tuesday's password |
-   | `skye@alamsambung.app` | Skye's password |
-   | `llymochi@alamsambung.app` | llymochi's password |
-   | `ela@alamsambung.app` | Ela's password |
-
-   Then Settings > User actions > turn **off** "Enable create (sign-up)" so
-   nobody can add accounts from the app.
+3. **Authentication**: enable **Email/Password** sign-in, create one user per
+   member (who and which email format: `app/src/lib/members.ts` and
+   `app/src/lib/identity.ts`; passwords are at least 6 characters) and turn
+   off public sign-up.
 4. **Firestore Database** > Create database > **production mode**, location
    `asia-southeast2` (Jakarta). Open the Rules tab and paste
    `app/firestore.rules`, then Publish.
-5. **Run the app**, sign in as the admin (Tuesday), open Stock and tap
+5. **Run the app**, sign in as the admin, open Stock and tap
    "Load sample products" if you want starter data.
 
 Members live in `app/src/lib/members.ts`, the admin in
