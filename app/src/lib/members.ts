@@ -46,3 +46,11 @@ export const MEMBER_TINT = bySlot(TINT_SLOTS)
 
 /** Solid bar colour per member, for the summary chart. */
 export const MEMBER_BAR = bySlot(BAR_SLOTS)
+
+/** "All" plus one option per member, for the filter chips on Sell and Catalog. */
+export function memberFilterOptions(allLabel: string): { value: 'all' | MemberKey; label: string }[] {
+  return [
+    { value: 'all', label: allLabel },
+    ...MEMBER_KEYS.map((key) => ({ value: key, label: MEMBER_NAMES[key] })),
+  ]
+}

@@ -15,6 +15,8 @@
     "items": "{{count}} items",
     "addOne": "Add one",
     "removeOne": "Remove one",
+    "left": "{{count}} left",
+    "soldOut": "Sold out",
     "cart": {
       "title": "Current sale",
       "clear": "Clear",
@@ -89,7 +91,8 @@
     "category": "Category",
     "save": "Save product",
     "delete": "Delete product",
-    "confirmDelete": "Delete this product? This cannot be undone.",
+    "confirmDeleteTitle": "Delete this product?",
+    "confirmDelete": "{{name}} will be removed for good. This cannot be undone.",
     "errors": {
       "name": "Enter a name in at least one language.",
       "price": "Enter a price above 0.",
@@ -113,7 +116,9 @@
     "waitingToSync": "Waiting to sync",
     "voided": "Voided",
     "voidSale": "Void this sale",
-    "confirmVoid": "Void this sale? The items go back into stock and it no longer counts in totals."
+    "confirmVoidTitle": "Void this sale?",
+    "confirmVoid": "The items go back into stock and it no longer counts in totals.",
+    "confirmVoidAction": "Void sale"
   },
   "summary": {
     "title": "Summary",
@@ -172,13 +177,18 @@
     "offline": "Offline",
     "soon": "Coming soon",
     "back": "Back",
-    "close": "Close"
+    "close": "Close",
+    "cancel": "Cancel",
+    "viewPhoto": "View photo",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out"
   },
   "toast": {
     "saleSaved": "Sale saved · {{total}}",
     "saleVoided": "Sale voided and stock restored",
     "productSaved": "Product saved",
-    "productDeleted": "Product deleted"
+    "productDeleted": "Product deleted",
+    "viewSales": "View"
   },
   "account": {
     "menu": "Account menu",

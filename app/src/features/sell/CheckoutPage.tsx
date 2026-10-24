@@ -16,8 +16,11 @@ export function CheckoutPage() {
   function confirm() {
     const total = c.total
     if (c.confirm()) {
-      toast.success(t('toast.saleSaved', { total: formatRupiah(total) }))
-      void navigate('/staff/sales')
+      // Back to selling: the next customer is usually waiting. The toast links to the log.
+      toast.success(t('toast.saleSaved', { total: formatRupiah(total) }), {
+        action: { label: t('toast.viewSales'), onClick: () => void navigate('/staff/sales') },
+      })
+      void navigate('/staff/sell')
     }
   }
 

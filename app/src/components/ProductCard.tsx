@@ -1,4 +1,6 @@
 import { Minus, Plus } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { ImageViewer } from '@/components/ui/image-viewer'
 import { CATEGORY_ICONS } from '@/lib/categories'
 import { MEMBER_TINT } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
@@ -23,7 +25,8 @@ interface ProductCardProps {
 
 /**
  * Tap the picture or name to add one. Once it is in the cart a - and + stepper
- * replaces the add button, so a mistake is one tap to undo.
+ * replaces the add button, so a mistake is one tap to undo. The small expand
+ * button on a photo opens it full screen without adding anything.
  */
 export function ProductCard({
   name,
@@ -39,6 +42,7 @@ export function ProductCard({
   addLabel,
   removeLabel,
 }: ProductCardProps) {
+  const { t } = useTranslation()
   const soldOut = stock <= 0
   const low = stock > 0 && stock <= 3
   const atMax = qty >= stock
@@ -52,27 +56,30 @@ export function ProductCard({
         soldOut && 'opacity-50',
       )}
     >
-      <button
-        type="button"
-        disabled={soldOut || atMax}
-        onClick={onAdd}
-        aria-label={`${addLabel}: ${name}`}
-        className="flex flex-col gap-2.5 text-left disabled:cursor-not-allowed"
-      >
-        {photoUrl ? (
-          <img src={photoUrl} alt="" className="h-[104px] w-full rounded-[18px] object-cover" />
-        ) : (
-          <div className={cn('flex h-[104px] items-center justify-center rounded-[18px]', MEMBER_TINT[owner])}>
-            <Icon className="size-[30px]" />
-          </div>
-        )}
-        <span className="flex flex-col gap-0.5">
-          <span className="text-sm font-semibold text-text">{name}</span>
-          <span className={cn('text-xs', low ? 'text-warn' : 'text-muted')}>
-            {ownerName} · {soldOut ? 'Sold out' : `${stock} left`}
+      <div className="relative">
+        <button
+          type="button"
+          disabled={soldOut || atMax}
+          onClick={onAdd}
+          aria-label={`${addLabel}: ${name}`}
+          className="flex w-full flex-col gap-2.5 text-left disabled:cursor-not-allowed"
+        >
+          {photoUrl ? (
+            <img src={photoUrl} alt="" className="h-[104px] w-full rounded-[18px] object-cover" />
+          ) : (
+            <div className={cn('flex h-[104px] items-center justify-center rounded-[18px]', MEMBER_TINT[owner])}>
+              <Icon className="size-[30px]" />
+            </div>
+          )}
+          <span className="flex flex-col gap-0.5">
+            <span className="text-sm font-semibold text-text">{name}</span>
+            <span className={cn('text-xs', low ? 'text-warn' : 'text-muted')}>
+              {ownerName} · {soldOut ? t('sell.soldOut') : t('sell.left', { count: stock })}
+            </span>
           </span>
-        </span>
-      </button>
+        </button>
+        {photoUrl && <ImageViewer src={photoUrl} title={name} className="absolute right-1.5 top-1.5" />}
+      </div>
 
       <div className="flex items-center justify-between gap-2">
         <span className="rounded-full bg-sticker px-2.5 py-1 font-head text-[13px] font-bold text-on-sticker">

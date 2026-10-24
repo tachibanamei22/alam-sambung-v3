@@ -5,12 +5,11 @@ import { useNavigate } from 'react-router'
 import { AmberHeader } from '@/components/AmberHeader'
 import { ProductCard } from '@/components/ProductCard'
 import { SyncPill } from '@/components/SyncPill'
-import { MEMBER_KEYS, MEMBER_NAMES } from '@/lib/members'
+import { Segmented } from '@/components/ui/segmented'
+import { MEMBER_NAMES, memberFilterOptions } from '@/lib/members'
 import { formatRupiah } from '@/lib/money'
-import { useIntroPhase } from '@/lib/useIntroPhase'
 import { useProductName } from '@/lib/productName'
 import type { MemberKey } from '@/lib/types'
-import { cn } from '@/lib/utils'
 import { useProducts } from '../products/productsStore'
 import { CartPanel } from './CartPanel'
 import { useCart } from './cart-context'
@@ -23,7 +22,6 @@ export function SellPage() {
   const cart = useCart()
   const products = useProducts()
   const nameOf = useProductName()
-  const intro = useIntroPhase()
   const [query, setQuery] = useState('')
   const [member, setMember] = useState<MemberFilter>('all')
 
@@ -70,36 +68,30 @@ export function SellPage() {
                 className="min-w-0 flex-1 bg-transparent text-sm text-text outline-none placeholder:text-muted"
               />
             </label>
-            <div className="flex flex-wrap gap-2" role="group" aria-label={t('stock.title')}>
-              {(['all', ...MEMBER_KEYS] as const).map((m) => (
-                <button
-                  key={m}
-                  type="button"
-                  aria-pressed={member === m}
-                  onClick={() => setMember(m)}
-                  className={cn(
-                    'rounded-full px-3.5 py-2 text-[13px] font-semibold',
-                    member === m ? 'bg-text text-bg' : 'bg-surface text-text',
-                  )}
-                >
-                  {m === 'all' ? t('sales.filters.all') : MEMBER_NAMES[m]}
-                </button>
-              ))}
-            </div>
+            <Segmented
+              aria-label={t('stock.title')}
+              value={member}
+              onValueChange={setMember}
+              options={memberFilterOptions(t('sales.filters.all'))}
+            />
           </div>
         </AmberHeader>
 
-        <section className="grid flex-1 grid-cols-2 content-start gap-3 px-5 pb-6 pt-5 lg:grid-cols-3 lg:gap-3.5 lg:px-7 wide:grid-cols-4">
+        {/* Keyed by the member filter so switching tabs replays the entrance. */}
+        <section
+          key={member}
+          className="grid flex-1 grid-cols-2 content-start gap-3 px-5 pb-6 pt-5 lg:grid-cols-3 lg:gap-3.5 lg:px-7 wide:grid-cols-4"
+        >
           {visible.length === 0 && (
-            <p className="col-span-full rounded-card border border-border bg-surface p-4 text-sm text-muted">
+            <p className="col-span-full animate-enter rounded-card border border-border bg-surface p-4 text-sm text-muted">
               {t('catalog.empty')}
             </p>
           )}
           {visible.map((p, i) => (
             <div
               key={p.id}
-              className={cn(intro && 'animate-enter')}
-              style={intro ? { animationDelay: `${Math.min(i, 10) * 30}ms` } : undefined}
+              className="animate-enter"
+              style={{ animationDelay: `${Math.min(i, 10) * 30}ms` }}
             >
               <ProductCard
                 name={nameOf(p)}

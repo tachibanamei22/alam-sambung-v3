@@ -15,6 +15,8 @@
     "items": "{{count}} barang",
     "addOne": "Tambah satu",
     "removeOne": "Kurangi satu",
+    "left": "{{count}} tersisa",
+    "soldOut": "Habis",
     "cart": {
       "title": "Penjualan saat ini",
       "clear": "Hapus",
@@ -89,7 +91,8 @@
     "category": "Kategori",
     "save": "Simpan produk",
     "delete": "Hapus produk",
-    "confirmDelete": "Hapus produk ini? Tindakan ini tidak bisa dibatalkan.",
+    "confirmDeleteTitle": "Hapus produk ini?",
+    "confirmDelete": "{{name}} akan dihapus permanen. Tindakan ini tidak bisa dibatalkan.",
     "errors": {
       "name": "Isi nama minimal dalam satu bahasa.",
       "price": "Isi harga di atas 0.",
@@ -113,7 +116,9 @@
     "waitingToSync": "Menunggu sinkron",
     "voided": "Dibatalkan",
     "voidSale": "Batalkan penjualan ini",
-    "confirmVoid": "Batalkan penjualan ini? Barang kembali ke stok dan tidak dihitung di total."
+    "confirmVoidTitle": "Batalkan penjualan ini?",
+    "confirmVoid": "Barang kembali ke stok dan tidak dihitung di total.",
+    "confirmVoidAction": "Batalkan penjualan"
   },
   "summary": {
     "title": "Ringkasan",
@@ -172,13 +177,18 @@
     "offline": "Offline",
     "soon": "Segera hadir",
     "back": "Kembali",
-    "close": "Tutup"
+    "close": "Tutup",
+    "cancel": "Batal",
+    "viewPhoto": "Lihat foto",
+    "zoomIn": "Perbesar",
+    "zoomOut": "Perkecil"
   },
   "toast": {
     "saleSaved": "Penjualan tersimpan · {{total}}",
     "saleVoided": "Penjualan dibatalkan, stok dikembalikan",
     "productSaved": "Produk tersimpan",
-    "productDeleted": "Produk dihapus"
+    "productDeleted": "Produk dihapus",
+    "viewSales": "Lihat"
   },
   "account": {
     "menu": "Menu akun",

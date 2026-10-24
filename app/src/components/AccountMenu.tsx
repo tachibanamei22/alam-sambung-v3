@@ -32,7 +32,7 @@ export function AccountMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger
         aria-label={t('account.menu')}
-        className="flex size-10 shrink-0 items-center justify-center rounded-full bg-text font-head text-sm font-bold text-bg outline-none focus-visible:ring-2 focus-visible:ring-text/40 data-[state=open]:scale-95"
+        className="flex size-10 shrink-0 items-center justify-center rounded-full bg-text font-head text-sm font-bold text-bg outline-none focus-visible:ring-2 focus-visible:ring-text/40 data-[state=open]:ring-2 data-[state=open]:ring-text/40"
       >
         {memberInitial(user.memberKey)}
       </DropdownMenuTrigger>
