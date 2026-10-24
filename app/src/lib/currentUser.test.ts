@@ -23,10 +23,10 @@ describe('current user in demo mode', () => {
     installStorage()
   })
 
-  it('starts signed in as the first member, who is the admin', async () => {
+  it('starts signed in as the first member', async () => {
     const { getCurrentUser, demoMode } = await load()
     expect(demoMode).toBe(true)
-    expect(getCurrentUser()).toEqual({ memberKey: 'tuesday', role: 'admin', status: 'signedIn' })
+    expect(getCurrentUser()).toEqual({ memberKey: 'tuesday', role: 'member', status: 'signedIn' })
   })
 
   it('derives the role from the member, never from saved data', async () => {
@@ -69,7 +69,7 @@ describe('current user in demo mode', () => {
     const { canEditProduct } = await load()
     expect(canEditProduct({ memberKey: 'skye', role: 'member' }, { owner: 'skye' })).toBe(true)
     expect(canEditProduct({ memberKey: 'skye', role: 'member' }, { owner: 'tuesday' })).toBe(false)
-    expect(canEditProduct({ memberKey: 'tuesday', role: 'admin' }, { owner: 'skye' })).toBe(true)
+    expect(canEditProduct({ memberKey: 'ela', role: 'admin' }, { owner: 'skye' })).toBe(true)
   })
 
   it('tells subscribers when the user changes', async () => {
