@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { NavLink } from 'react-router'
+import { rememberNavOrigin } from '@/lib/navOrigin'
 import { useSlidingHighlight } from '@/lib/useSlidingHighlight'
 import { cn } from '@/lib/utils'
 import type { TabItem } from './TabBar'
@@ -37,6 +38,7 @@ export function NavRail({ items }: { items: TabItem[] }) {
           <NavLink
             key={to}
             to={to}
+            onClick={(e) => rememberNavOrigin(e.currentTarget)}
             ref={(el) => {
               links.current[i] = el
             }}

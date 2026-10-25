@@ -1,4 +1,5 @@
 import { ChartColumn, LayoutGrid, Package, Receipt, ShoppingCart, Stamp } from 'lucide-react'
+import { useLayoutEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Outlet, useLocation } from 'react-router'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
@@ -7,6 +8,7 @@ import { TabBar } from '@/components/TabBar'
 import type { TabItem } from '@/components/TabBar'
 import { LoginPage } from '@/features/auth/LoginPage'
 import { useCurrentUser } from '@/lib/currentUser'
+import { takeNavOrigin } from '@/lib/navOrigin'
 import { cn } from '@/lib/utils'
 
 interface ShellProps {
@@ -20,6 +22,24 @@ interface ShellProps {
 function Shell({ tabs, tablet, narrow }: ShellProps) {
   const { pathname } = useLocation()
   const column = tablet && narrow
+  const page = useRef<HTMLElement>(null)
+
+  // Opening a tab: the new page grows out of the tab that was tapped. Other
+  // navigation (back, links inside a page) keeps the plain fade below.
+  useLayoutEffect(() => {
+    const el = page.current
+    const from = takeNavOrigin()
+    if (!el || !from || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const box = el.getBoundingClientRect()
+    el.style.transformOrigin = `${from.x - box.left}px ${from.y - box.top}px`
+    el.animate(
+      [
+        { opacity: 0, transform: 'scale(0.9)' },
+        { opacity: 1, transform: 'scale(1)' },
+      ],
+      { duration: 300, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' },
+    )
+  }, [pathname])
   return (
     <div
       className={cn(
@@ -40,6 +60,7 @@ function Shell({ tabs, tablet, narrow }: ShellProps) {
           content up with that column.
         */}
         <main
+          ref={page}
           key={pathname}
           data-narrow={column ? 'true' : undefined}
           className={cn(

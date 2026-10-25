@@ -1,6 +1,7 @@
 import type { LucideIcon } from 'lucide-react'
 import { useRef } from 'react'
 import { NavLink } from 'react-router'
+import { rememberNavOrigin } from '@/lib/navOrigin'
 import { useSlidingHighlight } from '@/lib/useSlidingHighlight'
 import { cn } from '@/lib/utils'
 import { useActiveIndex } from './useActiveIndex'
@@ -54,6 +55,7 @@ export function TabBar({ items, className }: { items: TabItem[]; className?: str
           >
             <NavLink
               to={to}
+              onClick={(e) => rememberNavOrigin(e.currentTarget)}
               className={cn(
                 'relative flex h-full flex-col items-center justify-center gap-0.5 rounded-full text-[11px] font-semibold transition-colors duration-300',
                 i === active ? 'text-bg' : 'text-muted',
